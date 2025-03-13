@@ -14,7 +14,6 @@ def get_transformed_step_results(stepResultUrls, buffer=0):
                     start_idx = max(0, i - buffer)
                     filtered_results.extend(step_results[start_idx:i+1])
             
-            filtered_results = step_results
             # Transform only the filtered data
             for step in filtered_results:
                 transformed_data[step.get('uuid')] = transform_step(step)
