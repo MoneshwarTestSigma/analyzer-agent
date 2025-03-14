@@ -2,7 +2,7 @@ from network_log_transformer import create_network_log_map
 from utils import get_ms_from_time, get_time_in_milliseconds, parse_log_entry
 def map_logs_to_steps(steps_map, har_entries, execution_logs, selenium_logs, console_logs):
 
-    buffer_time = 1000  # 1 second buffer
+    buffer_time = 500  # 0.5 second buffer
     string_max_len = 1000
     
     # Create time-based mapping for HAR entries

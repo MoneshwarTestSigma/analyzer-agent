@@ -1,5 +1,7 @@
+import json
 from map_logs_to_step import map_logs_to_steps
 from step_result_transformer import get_transformed_step_results
+from text_summarizer import summarize_text
 from utils import getFile, save_mapped_results
 import argparse
 
@@ -19,6 +21,10 @@ def main(console_log_url, network_log_url, selenium_log_url, execution_log_url, 
     
     # # Save results
     save_mapped_results(mapped_results, mapped_results_file_path)
+
+    summarized_results = summarize_text(json.dumps(mapped_results))
+
+    save_mapped_results(summarized_results, 'summarized_mapped_results.json')
 
 if __name__ == "__main__":
 
