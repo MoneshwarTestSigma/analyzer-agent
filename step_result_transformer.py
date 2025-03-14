@@ -2,24 +2,17 @@ import gzip
 import json
 import urllib
 
-def get_transformed_step_results(stepResultUrls, buffer=0):
+def get_transformed_step_results(step_results_json, buffer=0):
         transformed_data = {}
-        for url in stepResultUrls :
-            step_results = getStepFile(url)
-            # First, find failure entries and their context
-            filtered_results = []
-            for i, step in enumerate(step_results):
-                if step.get('result') == 'FAILURE':
-                    # Get up to buffer previous entries and the failure entry
-                    start_idx = max(0, i - buffer)
-                    filtered_results.extend(step_results[start_idx:i+1])
+        filtered_results = []
+        for i, step in enumerate(step_results_json):
+            if step.get('result') == 'FAILURE':
+                start_idx = max(0, i - buffer)
+                filtered_results.extend(step_results_json[start_idx:i+1])
             
             # Transform only the filtered data
-            for step in filtered_results:
-                transformed_data[step.get('uuid')] = transform_step(step)
-
-            print(f"Transformed step results count: {len(transformed_data)}")   
-
+        for step in filtered_results:
+            transformed_data[step.get('uuid')] = transform_step(step)
 
         return transformed_data
 
@@ -40,13 +33,3 @@ def transform_step(step):
         'selenium_logs': [],
         'console_logs': []
     }
-
-def getStepFile(url):
-    try:
-        with urllib.request.urlopen(url) as response:
-            compressed_data = response.read()
-            data = gzip.decompress(compressed_data).decode('utf-8') 
-            return json.loads(data) 
-    except Exception as e:
-        print(f"Error fetching file from {url}: {e}")
-        return None

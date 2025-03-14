@@ -5,18 +5,6 @@ import pytz
 import urllib.request
 
 
-
-def getFile(url , decode):
-    try:
-        with urllib.request.urlopen(url) as response:
-            data = response.read().decode(decode)
-            if(decode == 'windows-1252'):
-                return data.splitlines()
-            return json.loads(data) 
-    except Exception as e:
-        print(f"Error fetching file from {url}: {e}")
-        return None
-
 def save_mapped_results(mapped_results, output_file):
     with open(output_file, 'w') as f:
         json.dump(mapped_results, f, indent=4)
