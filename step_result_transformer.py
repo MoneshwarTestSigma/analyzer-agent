@@ -1,16 +1,18 @@
 def get_transformed_step_results(step_results_json, buffer=0):
         transformed_data = {}
         filtered_results = []
+        context_results = []
         for i, step in enumerate(step_results_json):
             if step.get('result') == 'FAILURE':
                 start_idx = max(0, i - buffer)
                 filtered_results.extend(step_results_json[start_idx:i+1])
+            context_results.append(context_transform(step))
             
             # Transform only the filtered data
         for step in filtered_results:
             transformed_data[step.get('uuid')] = transform_step(step)
 
-        return transformed_data
+        return transformed_data, context_results
 
 def get_mapped_result_url(input_json):
     base_url = "custify-raw-data/analyzer_agent/{tenant_id}/case-{test_case_id}/result-{test_case_result_id}-mapped-results.json"
@@ -37,4 +39,12 @@ def transform_step(step):
         'execution_logs': [],
         'selenium_logs': [],
         'console_logs': []
+    }
+
+def context_transform(step):
+    return {
+        'step_id': step.get('metadata', {}).get('testStep', {}).get('id'),
+        'action': step.get('metadata', {}).get('testStep', {}).get('action'),
+        'step_order': step.get('metadata', {}).get('testStep', {}).get('stepOrder'),
+        'result': step.get('result'),
     }
