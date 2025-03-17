@@ -1,7 +1,3 @@
-import gzip
-import json
-import urllib
-
 def get_transformed_step_results(step_results_json, buffer=0):
         transformed_data = {}
         filtered_results = []

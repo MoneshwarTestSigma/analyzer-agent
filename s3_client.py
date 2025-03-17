@@ -24,14 +24,17 @@ class S3Client():
         """
         Gets a file from S3 using a full S3 URL and decodes it
         """
-        bucket, prefix = self.extract_bucket_and_prefix(url)
-        
-        obj = self.s3.get_object(Bucket=bucket, Key=prefix)
-        data = obj['Body'].read().decode(decode)
-        
-        if decode == 'windows-1252':
-            return data.splitlines()
-        return json.loads(data)
+        try:
+            bucket, prefix = self.extract_bucket_and_prefix(url)
+            
+            obj = self.s3.get_object(Bucket=bucket, Key=prefix)
+            data = obj['Body'].read().decode(decode)
+            
+            if decode == 'windows-1252':
+                return data.splitlines()
+            return json.loads(data)
+        except Exception as e:
+            logging.error(f"Error processing {url}: {str(e)}")
     
     def extract_bucket_and_prefix(self, url):
         """
