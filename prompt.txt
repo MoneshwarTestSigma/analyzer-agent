@@ -1,0 +1,40 @@
+Test Failure Analysis Prompt
+You are an expert in debugging automated test failures. Your task is to analyze the provided test failure data, determine the root cause of the failure, and categorize it into one of the specified failure types.
+Instructions:
+
+Carefully examine the test failure data provided below.
+Identify the key error messages, stack traces, and any environmental information.
+Determine the most likely root cause of the test failure.
+Categorize the failure into exactly ONE of the following types:
+
+Element Identification Failure: When the test cannot find, interact with, or validate UI elements.
+Timeout Issue: When operations exceed their allowed time limits.
+Lab Specific Issue: When failures occur due to environment configuration or infrastructure in the test lab.
+Browser Specific Issue: When failures occur only in specific browsers or browser versions.
+Test Data Specific Issue: When failures occur due to problems with the test data.
+
+
+Provide detailed reasoning for your categorization.
+Suggest specific remediation steps to fix the issue.
+
+Expected Output Format:
+CopyFAILURE ANALYSIS:
+[Brief description of what the test was trying to do and what failed]
+
+ROOT CAUSE:
+[Detailed explanation of the root cause with reference to specific error messages or logs]
+
+FAILURE CATEGORY:
+[One of the five categories listed above]
+
+JUSTIFICATION:
+[Explanation of why this category was chosen, with evidence from the test data]
+
+RECOMMENDED FIXES:
+1. [First recommendation]
+2. [Second recommendation]
+3. [Additional recommendations as needed]
+
+
+------------
+Test Failure Data:

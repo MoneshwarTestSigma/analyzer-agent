@@ -7,7 +7,10 @@ import urllib.request
 
 def save_mapped_results(mapped_results, output_file):
     with open(output_file, 'w') as f:
-        json.dump(mapped_results, f, indent=4)
+        if(output_file.endswith('.json')):
+            json.dump(mapped_results, f, indent=4)
+        else:   
+            f.write(mapped_results)
 
 
 def parse_log_entry(line):

@@ -36,7 +36,7 @@ def main(input_json):
 
     summarized_results = summarize_text(json.dumps(mapped_results))
 
-    save_mapped_results(summarized_results, 'summarized_mapped_results.json')
+    save_mapped_results(summarized_results, 'summarized_mapped_results.txt')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process log URLs from JSON input.")
