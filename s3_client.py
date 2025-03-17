@@ -24,17 +24,21 @@ class S3Client():
         """
         Gets a file from S3 using a full S3 URL and decodes it
         """
+        bucket, prefix = self.extract_bucket_and_prefix(url)
+        
         try:
-            bucket, prefix = self.extract_bucket_and_prefix(url)
-            
             obj = self.s3.get_object(Bucket=bucket, Key=prefix)
             data = obj['Body'].read().decode(decode)
             
             if decode == 'windows-1252':
                 return data.splitlines()
             return json.loads(data)
+        except self.s3.exceptions.NoSuchKey:
+            print(f"File not found in S3: {url}")
+            return None
         except Exception as e:
-            logging.error(f"Error processing {url}: {str(e)}")
+            print(f"Error accessing file {url}: {str(e)}")
+            return None
     
     def extract_bucket_and_prefix(self, url):
         """
@@ -73,7 +77,7 @@ class S3Client():
                 
             json_files = []
             for obj in page['Contents']:
-                if obj['Key'].endswith('.json'):
+                if obj['Key'].endswith('.json') and 'step-results-' in obj['Key']:
                     json_files.append(obj)
             
             json_files.sort(key=lambda x: int(x['Key'].split('-')[-1].replace('.json', '')))
@@ -92,8 +96,30 @@ class S3Client():
                     else:
                         json_contents.append(json_data)
                 except Exception as e:
-                    logging.error(f"Error processing {obj['Key']}: {str(e)}")
-                    continue
+                    print(f"Error processing {obj['Key']}: {str(e)}")
+                    raise Exception(f"Error processing {obj['Key']}: {str(e)}")
         
         return json_contents
+    
+    def upload_json(self, data, url):
+        """
+        Uploads JSON data to S3 at the specified URL
+        
+        Args:
+            data: The data to upload (dict or list)
+            url: Full S3 URL where to upload the file
+        """
+        bucket, key = self.extract_bucket_and_prefix(url)
+        try:
+            json_data = json.dumps(data)
+            self.s3.put_object(
+                Bucket=bucket,
+                Key=key,
+                Body=json_data,
+                ContentType='application/json'
+            )
+            print(f"Successfully uploaded JSON to {url}")
+        except Exception as e:
+            print(f"Error uploading to {url}: {str(e)}")
+            raise Exception(f"Error uploading to {url}: {str(e)}")
             

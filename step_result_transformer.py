@@ -12,6 +12,14 @@ def get_transformed_step_results(step_results_json, buffer=0):
 
         return transformed_data
 
+def get_mapped_result_url(input_json):
+    base_url = "custify-raw-data/analyzer_agent/{tenant_id}/case-{test_case_id}/result-{test_case_result_id}-mapped-results.json"
+    return base_url.format(
+        tenant_id=str(input_json.get('tenant_id')),
+        test_case_id=str(input_json.get('test_case_id')),
+        test_case_result_id=str(input_json.get('id'))
+    )
+
 # Helpers:
 def transform_step(step):
     return {
@@ -22,6 +30,7 @@ def transform_step(step):
         'message': step.get('message'),
         'result': step.get('result'),
         'step_id': step.get('metadata', {}).get('testStep', {}).get('id'),
+        'action': step.get('metadata', {}).get('testStep', {}).get('action'),
         'test_case_result_id': step.get('testCaseResultId'),
         'test_case_id': step.get('metadata', {}).get('testStep', {}).get('testCaseId'),
         'network_logs': [],
