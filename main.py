@@ -29,14 +29,14 @@ def main(input_json):
 
     s3_client = S3Client()
     steps = s3_client.list_and_download_json_files(steps_base_url)
-    step_results_map = get_transformed_step_results(steps , screenshot_base_url , element_screenshot_base_url)
+    step_results_map , context_results = get_transformed_step_results(steps , screenshot_base_url , element_screenshot_base_url)
     network_logs = s3_client.get_file(network_log_url , 'utf-8')
     execution_logs = s3_client.get_file(execution_log_url , 'windows-1252')
     selinium_logs = s3_client.get_file(selenium_log_url , 'windows-1252')
     console_logs = s3_client.get_file(console_log_url, 'windows-1252')
     
 
-    mapped_results = map_logs_to_steps(step_results_map, network_logs, execution_logs, selinium_logs, console_logs)
+    mapped_results = map_logs_to_steps(step_results_map, network_logs, execution_logs, selinium_logs, console_logs, context_results)
     
     mapped_results_file_url = get_mapped_result_url(input_json)
     s3_client.upload_json(mapped_results, mapped_results_file_url)
