@@ -6,7 +6,7 @@ def map_logs_to_steps(steps_map, har_entries, execution_logs, selenium_logs, con
     string_max_len = 1000
     
     # Create time-based mapping for HAR entries
-    har_log_data = create_network_log_map(har_entries)
+    har_log_data = create_network_log_map(har_entries['log']['entries']) if har_entries else {}
     
     # Process each step in the map
     for uuid, step_data in steps_map.items():
@@ -16,24 +16,24 @@ def map_logs_to_steps(steps_map, har_entries, execution_logs, selenium_logs, con
         end_time_ms = get_time_in_milliseconds(end_time) + buffer_time
         
         # Map network logs based on time range
-        poppulateNetworkLogs(buffer_time, har_log_data, step_data, start_time, end_time)
+        populate_network_logs(buffer_time, har_log_data, step_data, start_time, end_time)
 
         # Map execution logs by UUID
-        populateExecutionLogs(execution_logs, uuid, step_data)
+        populate_execution_logs(execution_logs, uuid, step_data)
         
         # Map selinium logs based on time range
-        populateSeleniumLogs(selenium_logs, string_max_len, step_data, start_time_ms, end_time_ms)
+        populate_selenium_logs(selenium_logs, string_max_len, step_data, start_time_ms, end_time_ms)
         
         # Map console logs based on time range
-        populateConsoleLogs(console_logs, buffer_time, step_data, start_time, end_time)
+        populate_console_logs(console_logs, buffer_time, step_data, start_time, end_time)
     return steps_map
 
 
 
 # Helper:
 
-def populateConsoleLogs(console_logs, buffer_time, step_data, start_time, end_time):
-    if not any(line.startswith('//') for line in console_logs):  # Check if there are actual logs
+def populate_console_logs(console_logs, buffer_time, step_data, start_time, end_time):
+    if console_logs and not any(line.startswith('//') for line in console_logs):  # Check if there are actual logs
         for log_line in console_logs:
             try:
                 time_str = log_line.split(':')[0]
@@ -46,7 +46,7 @@ def populateConsoleLogs(console_logs, buffer_time, step_data, start_time, end_ti
             except ValueError:
                 pass
 
-def populateSeleniumLogs(selenium_logs, string_max_len, step_data, start_time_ms, end_time_ms):
+def populate_selenium_logs(selenium_logs, string_max_len, step_data, start_time_ms, end_time_ms):
     if selenium_logs:
         for log_line in selenium_logs:
             try:
@@ -59,7 +59,7 @@ def populateSeleniumLogs(selenium_logs, string_max_len, step_data, start_time_ms
             except ValueError:
                 pass
 
-def populateExecutionLogs(execution_logs, uuid, step_data):
+def populate_execution_logs(execution_logs, uuid, step_data):
     execution_log_populated = False
     if execution_logs:
         for log_line in execution_logs:
@@ -70,7 +70,7 @@ def populateExecutionLogs(execution_logs, uuid, step_data):
                 execution_log_populated = True
                 step_data['execution_logs'].append(log_entry['message'])
 
-def poppulateNetworkLogs(buffer_time, har_log_data, step_data, start_time, end_time):
+def populate_network_logs(buffer_time, har_log_data, step_data, start_time, end_time):
     if har_log_data:
         for (start, end), log_entry in har_log_data.items():
             if end > end_time + buffer_time:

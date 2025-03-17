@@ -14,7 +14,14 @@ def create_network_log_map(har_entries):
             try:
                 start_time_ms = convert_to_ist_ms(start_time_str, "%Y-%m-%dT%H:%M:%S")
             except ValueError:
-                start_time_ms = convert_to_ist_ms(start_time_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+                try:
+                    # Try parsing with microseconds
+                    start_time_str = start_time_str.replace('Z', '+0000')
+                    start_time_ms = convert_to_ist_ms(start_time_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+                except ValueError:
+                    # If both fail, try with truncated microseconds
+                    start_time_str = start_time_str[:26] + '+0000'  # Truncate to 6 decimal places
+                    start_time_ms = convert_to_ist_ms(start_time_str, "%Y-%m-%dT%H:%M:%S.%f%z")
 
             end_time_ms = start_time_ms + duration_ms
 
@@ -49,8 +56,8 @@ def create_network_log_map(har_entries):
         return time_log_map
 
     except Exception as e:
-        print(f"Unexpected Error: {e}")
-        return {}
+        print(f"Unexpected Error while creating network log map: {e}")
+        raise Exception(f"Unexpected Error while creating network log map:: {e}")
 
 
 # Helper:

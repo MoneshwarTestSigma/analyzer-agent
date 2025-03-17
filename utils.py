@@ -4,6 +4,18 @@ from datetime import datetime
 import pytz
 import urllib.request
 
+def should_skip_analysis(input_json):
+    message = input_json.get('message')
+    skippable_failures = [
+        "Visual differences identified",
+        "Test Case pre-requisite failed",
+        "Test Suite pre-requisite failed",
+        "Test machine prerequisite failed"
+    ]
+    if (message in skippable_failures):
+        return True, "Skipping failure analysis as the case failure is " + message
+    return False, None
+
 
 def save_mapped_results(mapped_results, output_file):
     with open(output_file, 'w') as f:
