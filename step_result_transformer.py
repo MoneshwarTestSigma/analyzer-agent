@@ -1,4 +1,8 @@
-def get_transformed_step_results(step_results_json, buffer=0):
+from s3_client import S3Client
+from utils import get_bucket_and_path
+
+
+def get_transformed_step_results(step_results_json, screenshot_base_url, element_screenshot_base_url , buffer=0):
         transformed_data = {}
         filtered_results = []
         for i, step in enumerate(step_results_json):
@@ -8,7 +12,7 @@ def get_transformed_step_results(step_results_json, buffer=0):
             
             # Transform only the filtered data
         for step in filtered_results:
-            transformed_data[step.get('uuid')] = transform_step(step)
+            transformed_data[step.get('uuid')] = transform_step(step , screenshot_base_url , element_screenshot_base_url)
 
         return transformed_data
 
@@ -21,7 +25,7 @@ def get_mapped_result_url(input_json):
     )
 
 # Helpers:
-def transform_step(step):
+def transform_step(step , screenshot_base_url , element_screenshot_base_url):
     return {
         'step_result_number': step.get('stepNumber'),
         'uuid': step.get('uuid'),
@@ -36,5 +40,31 @@ def transform_step(step):
         'network_logs': [],
         'execution_logs': [],
         'selenium_logs': [],
-        'console_logs': []
+        'console_logs': [],
+        'screenshots' : get_screenshot_presigned(step , screenshot_base_url),
+        'element_screenshots' : get_element_screenshot_presigned(step , element_screenshot_base_url)
     }
+
+def get_screenshot_presigned(step , screenshot_base_url):
+    screenshot_name = step.get('screenshotName')
+    if screenshot_name is None:
+        return ""
+    s3_client = S3Client()
+    bucket, path = get_bucket_and_path(screenshot_base_url)
+    presigned_url = s3_client.get_presigned_url(
+        bucket,
+        f"{path}{screenshot_name}"
+    )
+    return presigned_url
+
+def get_element_screenshot_presigned(step , element_screenshot_base_url):
+    element_id = step.get('fieldDefinitionDetails', {}).get('ui-identifier', {}).get('uiIdentifierEntity', {}).get('id')
+    if element_id is None:
+        return ""
+    bucket, path = get_bucket_and_path(element_screenshot_base_url)
+    s3_client = S3Client()
+    presigned_url = s3_client.get_presigned_url(
+        bucket,
+        f"{path}element-{element_id}.png"
+    )
+    return presigned_url

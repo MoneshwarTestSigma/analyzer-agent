@@ -9,7 +9,6 @@ import argparse
 
 
 def main(input_json):
-    test_case_result_message = input_json.get('message')
 
     should_skip, skip_message = should_skip_analysis(input_json)
     if (should_skip):
@@ -24,12 +23,13 @@ def main(input_json):
     execution_log_url = input_json.get('execution_logs_url')
     screenshot_base_url = input_json.get('screenshot_base_url')
     failed_step_locator_base_url = input_json.get('failed_step_locator_base_url')
+    element_screenshot_base_url = input_json.get('element_screenshot_base_url')
     
     mapped_results_file_path = "mapped_results.json"
 
     s3_client = S3Client()
     steps = s3_client.list_and_download_json_files(steps_base_url)
-    step_results_map = get_transformed_step_results(steps)
+    step_results_map = get_transformed_step_results(steps , screenshot_base_url , element_screenshot_base_url)
     network_logs = s3_client.get_file(network_log_url , 'utf-8')
     execution_logs = s3_client.get_file(execution_log_url , 'windows-1252')
     selinium_logs = s3_client.get_file(selenium_log_url , 'windows-1252')

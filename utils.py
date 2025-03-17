@@ -2,7 +2,14 @@ import re
 import json
 from datetime import datetime
 import pytz
-import urllib.request
+
+def get_bucket_and_path(url: str):
+    if "/" in url:
+        bucket, path = url.split("/", 1)
+    else:
+        bucket, path = url, "" 
+
+    return bucket, path
 
 def should_skip_analysis(input_json):
     message = input_json.get('message')

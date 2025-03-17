@@ -19,6 +19,26 @@ class S3Client():
             endpoint_url="https://s3.amazonaws.com/"
         )
     
+    def get_presigned_url(self, bucket_name, object_key, expiration=10800):
+            """
+            Generate a presigned URL for an S3 object.
+
+            :param bucket_name: Name of the S3 bucket.
+            :param object_key: Key of the object in the bucket.
+            :param expiration: Time in seconds for the presigned URL to remain valid (default is 10,800 seconds) (3 Hrs).
+            :return: Presigned URL as a string.
+            """
+            try:
+                url = self.s3.generate_presigned_url(
+                    'get_object',
+                    Params={'Bucket': bucket_name, 'Key': object_key},
+                    ExpiresIn=expiration
+                )
+                return url
+            except Exception as e:
+                print(f"Error generating presigned URL: {e}")
+                return None
+    
     def get_file(self, url, decode='utf-8'):
         """
         Gets a file from S3 using a full S3 URL and decodes it
