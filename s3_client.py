@@ -1,5 +1,4 @@
 import boto3
-import logging
 import json
 import gzip
 import io
