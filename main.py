@@ -24,6 +24,7 @@ def main(input_json):
     screenshot_base_url = input_json.get('screenshot_base_url')
     failed_step_locator_base_url = input_json.get('failed_step_locator_base_url')
     element_screenshot_base_url = input_json.get('element_screenshot_base_url')
+    test_case_message = input_json.get('message')
     
     mapped_results_file_path = "mapped_results.json"
 
@@ -36,7 +37,7 @@ def main(input_json):
     console_logs = s3_client.get_file(console_log_url, 'windows-1252')
     
 
-    mapped_results = map_logs_to_steps(step_results_map, network_logs, execution_logs, selinium_logs, console_logs, context_results)
+    mapped_results = map_logs_to_steps(step_results_map, network_logs, execution_logs, selinium_logs, console_logs, context_results , test_case_message)
     
     mapped_results_file_url = get_mapped_result_url(input_json)
     s3_client.upload_json(mapped_results, mapped_results_file_url)

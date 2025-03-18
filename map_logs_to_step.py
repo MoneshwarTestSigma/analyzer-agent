@@ -1,6 +1,6 @@
 from network_log_transformer import create_network_log_map
 from utils import get_ms_from_time, get_time_in_milliseconds, parse_log_entry
-def map_logs_to_steps(step_results_map, har_entries, execution_logs, selenium_logs, console_logs, context_results):
+def map_logs_to_steps(step_results_map, har_entries, execution_logs, selenium_logs, console_logs, context_results, test_case_message):
 
     buffer_time = 500  # 0.5 second buffer
     string_max_len = 1000
@@ -36,13 +36,13 @@ def map_logs_to_steps(step_results_map, har_entries, execution_logs, selenium_lo
         # Map console logs based on time range
         populate_console_logs(console_logs, buffer_time, step_data, start_time, end_time, first_failure_start_time, console_logs_for_context)
 
-    return generate_results_with_context(step_results_map, context_results, network_logs_for_context, selenium_logs_for_context, console_logs_for_context)
+    return generate_results_with_context(step_results_map, context_results, network_logs_for_context, selenium_logs_for_context, console_logs_for_context, test_case_message)
 
 
 
 # Helper:
 
-def generate_results_with_context(step_results_map, context_results, network_logs_for_context, selenium_logs_for_context, console_logs_for_context):
+def generate_results_with_context(step_results_map, context_results, network_logs_for_context, selenium_logs_for_context, console_logs_for_context , test_case_message):
 
     # Prepare the final response structure
     results_with_context = {
@@ -52,7 +52,8 @@ def generate_results_with_context(step_results_map, context_results, network_log
             "network": network_logs_for_context,
             "console": console_logs_for_context,
             "selenium": selenium_logs_for_context
-        }
+        },
+        "test_case_message" : test_case_message
     }
 
     return results_with_context
@@ -77,7 +78,8 @@ def populate_selenium_logs(selenium_logs, string_max_len, step_data, start_time_
             try:
                 total_ms = get_ms_from_time(log_line.split(' ')[0], "Etc/GMT+4")
                 if total_ms >= first_failure_start_time_ms:
-                    selenium_logs_for_context.append(log_line)
+                    if(log_line.split(' ')[1] == 'ERROR'):
+                        selenium_logs_for_context.append(log_line)
                     # Check if log time falls within the given time range
                 if start_time_ms <= total_ms <= end_time_ms:
                     step_data['selenium_logs'].append(log_line.strip()[:string_max_len])
