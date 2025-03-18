@@ -9,10 +9,10 @@ Here is the input JSON structure:
 
 Your task is to categorize the errors in the input JSON into the following four categories:
 
-1. Test Data Related Errors
-2. Element Related Errors
-3. Timeout Related Errors
-4. Lab Specific Issues
+1. TEST_DATA
+2. ELEMENT
+3. TIMEOUT
+4. LAB
 
 For each error, you should:
 
@@ -59,6 +59,24 @@ To complete this task:
 
 Provide your analysis and output in the specified JSON format, ensuring that all error categories, root causes, and suggestions are clear, concise, and relevant to the input data.
 
+Analysis Instructions:
+1. Carefully review all provided logs and screenshots.
+2. Identify any errors or issues present in the data.
+3. Classify each error according to the following categories:
+   - timeout_issue: Related to timeouts, may require increasing wait times or retrying actions.
+   - element_issue: Related to elements, including locator changes, DOM changes, style changes, and image locator issues.
+   - testdata_issue: Related to test data or text verification issues.
+   - other_issue: Any issues not falling into the above categories.
+4. Determine the root cause of each identified error.
+5. Generate actionable suggestions for resolving each issue.
+
+Important Guidelines:
+Verify all inputs given to you before making any conclusions.
+Provide suggestions only in the context of the failure step action.
+Ensure suggestions are actionable and allow another AI agent to fix the problem without additional information.
+Do not speculate or provide information outside the given context.
+For network logs, focus on requests relevant to the context, not every failed request.
+Use screenshots to verify page load status and element presence when applicable.
 """
 
 def get_prompt_data(input_data):
