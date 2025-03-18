@@ -84,6 +84,7 @@ def get_prompt_data(input_data):
                 INPUT_JSON = str(input_data)
             )
   print(actual_prompt)
+  return actual_prompt
 
 def get_file_data(file_name):
    with open(file_name, "r") as f:
