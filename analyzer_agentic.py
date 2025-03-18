@@ -1,145 +1,74 @@
 _prompt ="""
-You are an expert in log analysis and error classification for automated testing on web applications. Your task is to analyze the provided JSON input, which includes network logs (HAR format), console logs, Selenium logs, execution logs, and a screenshot of the step being executed and previous few steps which are executed before failing and classify that into failure and provide context on it. You need to verify all the inputs given to you and find RCA and provide the resolutions in the format of suggestions.
+You are tasked with analyzing and categorizing errors from test execution results. The input will be provided in JSON format, and you need to categorize the errors into specific types, identify root causes, and suggest actionable steps to resolve the issues.
 
-We will be providing a classifications to identity classification of what kind of an error it is
-{error_classification_definition}
+Here is the input JSON structure:
 
+<input_json>
+{INPUT_JSON}
+</input_json>
 
-Your inputs  are in json format for a single step we will be providing the steps which are succeeded before this step :
-  "action" : "which represents what action is being performed",
-  "message": "provides the context of why step has failed or succeeded"
-  "result": "Result constant of that particular step"
-  "network_logs": "HAR file content (network logs)",
-  "console_logs": "Full console logs for the step execution period",
-  "selenium_logs": "Full Selenium logs for the step execution period",
-  "execution_logs": "Full execution logs for the step execution period",
-  "screenshots": "pre signed url which is accessible to get screenshot",
-  "element_screenshots": "pre signed url which is accessible which has image of element when it being recorded"
+Your task is to categorize the errors in the input JSON into the following four categories:
 
-Your output should be in a json format which can be multiple in number:
-  "errors": [
-    (
-      "classified_error": "Error category",
-      "root_cause": "Brief explanation of the root cause",
-      "suggestions": [ "Actionable step 1", "Actionable step 2"]
-    ),
-    (
-      "classified_error": "Another error category",
-      "root_cause": "Brief explanation of the root cause",
-      "suggestions": ["Actionable step 1","Actionable step 2"]
-    )
-  ]
+1. Test Data Related Errors
+2. Element Related Errors
+3. Timeout Related Errors
+4. Lab Specific Issues
 
-Output instructions:
--suggestions given in output should in the provided context for the failure step action
--It should allow another AI agent to fix the problem without any further information
--The suggestion should be in context with given data and do not hallucinate anything
--The suggestion should be an actionable format
--If you dont find anything just provide the context of the error message displayed in the failure step.
--In provided network logs try to consider request which are in your context not every failed requests
+For each error, you should:
 
+1. Determine the appropriate error category
+2. Identify the root cause of the error
+3. Suggest actionable steps to resolve the issue
 
-Example:
-Input:
-  "network_logs": "network log from a browser as a HAR file format",
-  "console_logs": [
-    "1741757693655:DEBUG:https://simply-travel.testsigma.com/ - [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
-    "1741757695871:SEVERE:https://nhnb.github.io/favicon.ico - Failed to load resource: the server responded with a status of 404 ()"
-  ],
-  "selenium_logs": [
-    "Selenium EXCEPTION: findElement org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: (\"method\":\"css selector\",\"selector\":\"#testsigmarandomtag54321\")"
-  ],
-  "execution_logs": [
-    " [Click on Submit] Selenium EXCEPTION: findElement org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element: (\"method\":\"xpath\",\"selector\":\"//button[contains(text(), 'Submit')]\")"
+Here are examples of each error category to guide your analysis:
 
-Output:
+1. Test Data Related Errors:
+   Example: Mismatch between expected and actual URL or data values.
 
-  "errors": [
-    (
-      "classified_error": "element_issue",
-      "root_cause": "The Selenium log indicates a 'NoSuchElementException' when trying to locate an element with the selector '#testsigmarandomtag54321'.",
-      "suggestions": [
-        "Verify the locator (XPath or CSS selector) used in the script.",
-      ]
-    ),
-    (
-      "classified_error": "Network Issues",
-      "root_cause": "The network log shows a 500 Internal Server Error for the API request to 'https://example.com/api/data'.",
-      "suggestions": [
-        "Verify the server status and ensure it is running correctly.",
-      ]
-    )
-  ]
+2. Element Related Errors:
+   Example: Element not found on the page or incorrect element locator.
 
-Actual Input:
-{input_data}
+3. Timeout Related Errors:
+   Example: Page load timeout or element wait timeout.
+
+4. Lab Specific Issues:
+   Example: Issues related to test environment setup or configuration.
+
+After analyzing the input JSON, provide your output in the following JSON format only provide this output format don't add anything to it:
+
+<output_format>
+{OUTPUT_FORMAT}
+</output_format>
+
+To complete this task:
+
+1. Carefully read and analyze the input JSON, paying attention to the "message", "action", and other relevant fields in the "failed_result_context_details" array, as well as the "test_case_message" field.
+
+2. For each error found in the input:
+   a. Determine the most appropriate error category based on the provided examples and your analysis.
+   b. Identify the root cause of the error by examining the error message and related logs.
+   c. Suggest 2-3 actionable steps to resolve the issue.
+
+3. Construct your response using the specified output JSON format, ensuring that each error is properly categorized, has an identified root cause, and includes actionable suggestions.
+
+4. If there are multiple errors in the input, include all of them in your output, with each error as a separate object in the "errors" array.
+
+5. If there are no errors in the input JSON or if the input is empty, return an empty "errors" array in your output.
+
+Provide your analysis and output in the specified JSON format, ensuring that all error categories, root causes, and suggestions are clear, concise, and relevant to the input data.
+
 """
 
-
-error_classification_definition ="""{
-     "name": "timeout_issue",
-     "description": "You should classify errors related to timeouts and provides suggestions for increasing wait times or retrying actions. you must verify with the provided screenshot if available whether page is loaded fully or not and provide suggestions using that",
-     "parameters": {
-       "logs": "object",
-       "screenshot": "presigned_url"
-     },
-     "output": {
-       "classified_error": "string",
-       "root_cause": "string",
-       "suggestions": ["string"]
-     }
-   }
-
-   {
-     "name": "element_issue",
-     "description": "You should classify errors related to elements, including locator changes, DOM changes, style changes, and image locator issues. for this try to read from the screen shot available to check whether element is present or not for the action which is going to be performed. You are provided with the information of bounded element web page screenshot. In this screenshot the desired element is in highlighted with green colour border.",
-     "parameters": {
-       "logs": "object",
-       "screenshot": "presigned_url"
-       "element_screenshot": "presigned_url"
-     },
-     "output": {
-       "classified_error": "string",
-       "root_cause": "string",
-       "suggestions": ["string"]
-     }
-   }
-
-   {
-     "name": "testdata_issue",
-     "description": "Classifies errors related to test data issues and verification of text issues and any data related issues, for this try to read from screen shot and other input and try to give a suggestion what test data is being expected for that scenario.",
-     "parameters": {
-       "logs": "object",
-       "screenshot": "presigned_url"
-     },
-     "output": {
-       "classified_error": "string",
-       "root_cause": "string",
-       "suggestions": ["string"]
-     }
-   }
-
-   {
-   "name": "other-issue",
-        "description": "Classifies errors which might not be related to above issues and try read from the context of those issues and provide suggestions and take every input data into consideration and produce suggestions",
-        "parameters": {
-          "logs": "object",
-          "screenshot": "object"
-        },
-        "output": {
-          "classified_error": "string",
-          "root_cause": "string",
-          "suggestions": ["string"]
-        }
-   }
-   }
+output_format = """
+   "classified_error": "Error category",
+   "root_cause": "Brief explanation of the root cause",
+   "suggestions": ["Actionable step 1", "Actionable step 2"]
 """
-
 
 def get_prompt_data(input_data):
   actual_prompt = _prompt.format(
-                error_classification_definition = error_classification_definition,
-                input_data = str(input_data)
+                OUTPUT_FORMAT = output_format,
+                INPUT_JSON = str(input_data)
             )
   return actual_prompt
 
