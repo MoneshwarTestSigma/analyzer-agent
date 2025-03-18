@@ -62,13 +62,8 @@ Provide your analysis and output in the specified JSON format, ensuring that all
 Analysis Instructions:
 1. Carefully review all provided logs and screenshots.
 2. Identify any errors or issues present in the data.
-3. Classify each error according to the following categories:
-   - timeout_issue: Related to timeouts, may require increasing wait times or retrying actions.
-   - element_issue: Related to elements, including locator changes, DOM changes, style changes, and image locator issues.
-   - testdata_issue: Related to test data or text verification issues.
-   - other_issue: Any issues not falling into the above categories.
-4. Determine the root cause of each identified error.
-5. Generate actionable suggestions for resolving each issue.
+3. Determine the root cause of each identified error.
+4. Generate actionable suggestions for resolving each issue.
 
 Important Guidelines:
 Verify all inputs given to you before making any conclusions.
