@@ -47,7 +47,7 @@ class S3Client():
         
         try:
             obj = self.s3.get_object(Bucket=bucket, Key=prefix)
-            data = obj['Body'].read().decode(decode)
+            data = obj['Body'].read().decode(decode,errors='ignore')
             
             if decode == 'windows-1252':
                 return data.splitlines()
