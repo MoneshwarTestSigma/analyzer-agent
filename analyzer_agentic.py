@@ -37,7 +37,9 @@ Here are examples of each error category to guide your analysis:
 After analyzing the input JSON, provide your output in the following JSON format only provide this output format don't add anything to it:
 
 <output_format>
-{OUTPUT_FORMAT}
+   "classified_error": "Error category",
+   "root_cause": "Brief explanation of the root cause",
+   "suggestions": ["Actionable step 1", "Actionable step 2"]
 </output_format>
 
 To complete this task:
@@ -59,15 +61,8 @@ Provide your analysis and output in the specified JSON format, ensuring that all
 
 """
 
-output_format = """
-   "classified_error": "Error category",
-   "root_cause": "Brief explanation of the root cause",
-   "suggestions": ["Actionable step 1", "Actionable step 2"]
-"""
-
 def get_prompt_data(input_data):
   actual_prompt = _prompt.format(
-                OUTPUT_FORMAT = output_format,
                 INPUT_JSON = str(input_data)
             )
   return actual_prompt
