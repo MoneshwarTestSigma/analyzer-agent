@@ -85,7 +85,7 @@ def get_file_data(file_name):
    with open(file_name, "r") as f:
       return f.read()
 
-if __name__=="__main__":
-   input_data = get_file_data("summarized_mapped_results.txt")
-   get_prompt_data(input_data)
+# if __name__=="__main__":
+#    input_data = get_file_data("summarized_mapped_results.txt")
+#    get_prompt_data(input_data)
 
