@@ -7,7 +7,8 @@ def get_transformed_step_results(step_results_json, screenshot_base_url, element
         filtered_results = []
         context_results = []
         for i, step in enumerate(step_results_json):
-            if step.get('result') == 'FAILURE':
+            # [1].metadata.testStep.ignoreStepResult
+            if step.get('result') == 'FAILURE' and step.get('metadata',{}).get('testStep',{}).get('ignoreStepResult', False) == False:
                 start_idx = max(0, i - buffer)
                 filtered_results.extend(step_results_json[start_idx:i+1])
             context_results.append(context_transform(step))

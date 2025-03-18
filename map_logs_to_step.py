@@ -47,12 +47,12 @@ def generate_results_with_context(step_results_map, context_results, network_log
     # Prepare the final response structure
     results_with_context = {
         "failed_result_context_details": list(step_results_map.values()),
-        "step_results_context": context_results,
-        "logs": {
-            "network": network_logs_for_context,
-            "console": console_logs_for_context,
-            "selenium": selenium_logs_for_context
-        },
+        # "step_results_context": context_results,
+        # "logs": {
+        #     "network": network_logs_for_context,
+        #     "console": console_logs_for_context,
+        #     "selenium": selenium_logs_for_context
+        # },
         "test_case_message" : test_case_message
     }
 
@@ -78,10 +78,9 @@ def populate_selenium_logs(selenium_logs, string_max_len, step_data, start_time_
             try:
                 total_ms = get_ms_from_time(log_line.split(' ')[0], "Etc/GMT+4")
                 if total_ms >= first_failure_start_time_ms:
-                    if(log_line.split(' ')[1] == 'ERROR'):
-                        selenium_logs_for_context.append(log_line)
+                    selenium_logs_for_context.append(log_line)
                     # Check if log time falls within the given time range
-                if start_time_ms <= total_ms <= end_time_ms:
+                if log_line.split(' ')[1] == 'ERROR' and start_time_ms <= total_ms <= end_time_ms:
                     step_data['selenium_logs'].append(log_line.strip()[:string_max_len])
             except ValueError:
                 pass
