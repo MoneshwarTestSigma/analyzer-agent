@@ -1,0 +1,1079 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update nlp_test_case_step\nset wait_time = {{ $json.step_level_step_timeout}}\nwhere id = {{ $('Edit Fields1').item.json.step_id }};\n\nUPDATE execution \nSET step_time_out = {{ $json.execution_step_timeout}}, \n    page_time_out = {{ $json.execution_page_time_out }}\nWHERE id = ({{ $('environment_result1').item.json.id }});\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1260,
+        580
+      ],
+      "id": "b1b2be62-2d40-4a49-917f-f689fefc54e3",
+      "name": "Update timeouts",
+      "credentials": {
+        "mySql": {
+          "id": "D05japPKty8F81tv",
+          "name": "Maintenance Tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## TimeOut issue handling",
+        "height": 280,
+        "width": 680,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        500
+      ],
+      "id": "993870fb-754f-43b1-bd58-f89fe2e3fa14",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id , step_time_out , enforce_time_out , page_time_out  from execution where id in (select execution_id from execution_result where id in (select execution_result_id from test_case_result where id = {{ $('Edit Fields1').item.json.test_case_result_id }}));",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        820,
+        580
+      ],
+      "id": "c8e534ca-7a50-4abc-bb1a-0db83e2dd230",
+      "name": "environment_result1",
+      "credentials": {
+        "mySql": {
+          "id": "nIXLn76IWt8zGyEa",
+          "name": "Dynamic tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f8d7db2-cb96-4f8e-afa3-737a5c211636",
+              "name": "step_id",
+              "value": "847",
+              "type": "string"
+            },
+            {
+              "id": "e14cb3a3-05c3-45fe-a7c7-a1bd74a34f63",
+              "name": "test_case_result_id",
+              "value": "138",
+              "type": "string"
+            },
+            {
+              "id": "022f1270-bd08-4ce1-91c8-80e5a73be919",
+              "name": "tenant_id",
+              "value": "200001212",
+              "type": "string"
+            },
+            {
+              "id": "6b32d0ca-530a-42ae-a0d3-49f5b9632aab",
+              "name": "stack",
+              "value": "devtesting",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -900,
+        1340
+      ],
+      "id": "08f26cd7-00bf-4ab5-b277-7e7cd51d8857",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        240,
+        1340
+      ],
+      "id": "8b0966a7-dd99-40af-938b-bf9028a7e117",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = {\n  step_level_step_timeout: $('Test Step').first().json.wait_time,\n  execution_step_timeout:$input.first().json.step_time_out ,\n  execution_page_time_out: $input.first().json.page_time_out\n};\n\n// Step Timeout changes\nif($input.first().json.enforce_time_out == 1) {\n  // Plan Level\n  if($input.first().json.step_time_out < 20)\n    result.execution_step_timeout = 30\n  else\n    result.execution_step_timeout = $input.first().json.step_time_out + 10;\n  \n}\nelse {\n  // Step Level\n  if($('Test Step').first().json.wait_time < 20)\n    result.step_level_step_timeout = 30;\n  else\n    result.step_level_step_timeout = $('Test Step').first().json.wait_time + 10;\n  \n}\n\nif($input.first().json.page_time_out < 20)\n  result.execution_page_time_out = 30;\nelse\n  result.execution_page_time_out = $input.first().json.page_time_out + 10;\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        580
+      ],
+      "id": "383bd7b2-0f28-48d1-a6b7-cafc0e62135f",
+      "name": "Populate new timeout values"
+    },
+    {
+      "parameters": {
+        "content": "## Test Data",
+        "height": 460,
+        "width": 1900
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        680,
+        1320
+      ],
+      "typeVersion": 1,
+      "id": "a57b1eba-2b32-48b2-8932-b643bdecf83d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=select id ,test_step_id , test_data_key ,type , value   from test_step_data where test_step_id = {{$('Test Step').item.json.id }} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        860,
+        1440
+      ],
+      "id": "2eb7c919-fd9b-403e-9c90-fe6cd0a2b32e",
+      "name": "Data For TestData update"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Your goal is to modify the test data values to align with the expected data mentioned in the error analysis.\n\nYou will be given three inputs:\n\n1. Error Analysis:\n<error_analysis>\n{{ $('Extract from File').item.json.data.output }}\n</error_analysis>\n\n2. Test Data:\n<test_data>\n{{ JSON.stringify($('Data For TestData update').all().map((item)=>item.json))}}\n</test_data>\n\n3. Test Step:\n<test_step>\n{{ $('Test Step').item.json.action }}\n\n## Test Step Template\n{{ JSON.stringify($('Template Population').item) }}\n</test_step>\n\nFollow these steps to complete the task:\n\n1. Analyze the error_analysis input:\n   - Identify the classified_error type\n   - Understand the root_cause of the error\n   - Review the suggestions provided\n\n2. Examine the test_data input:\n   - Look for test data objects that may be related to the error\n   - Pay attention to the test_data_key and value fields\n\n3. Determine which test data value(s)in a given <test_step> which might have  need to be modified based on the root_cause and suggestions.\n\n4. Modify only the value field(s) in the test data to correct the error:\n   - Ensure the corrected value aligns with the expected data mentioned in the root_cause\n   - If the actual value is explicitly mentioned in the error analysis, use that value\n   - Do not modify any other attributes of the test data objects\n\n5. Prepare the output:\n   - Include all test data objects, even if they were not modified\n   - Ensure the output maintains the same structure as the input test data\n\nImportant reminders:\n- Only modify the value field(s) in the test data\n- Do not change any other attributes or add/remove objects from the test data\n- Ensure your changes align with the error analysis information\n- Include all test data objects in the output, even if they were not modified\n- There may be multiple test data objects, but only modify and provide outputs for the required ones\n- The main aim is to make the test case pass\n- Do not add any extra text or explanations to the output\n\nProvide the corrected test data as normal text without any additional formatting or comments. The output should be in the following format:\n\n[\n  {\n    \"id\": 1,\n    \"test_data_key\": \"example-key\",\n    \"type\": \"raw\",\n    \"value\": \"corrected-value\"\n  },\n  {\n    \"id\": 2,\n    \"test_data_key\": \"another-key\",\n    \"type\": \"raw\",\n    \"value\": \"unchanged-value\"\n  }\n]\n\nRemember to include all test data objects in the output, even if they were not modified. Do not modify the id field or any other attributes except the value field when necessary.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI assistant tasked with analyzing test automation data and correcting test inputs based on error classifications and suggestions."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1260,
+        1440
+      ],
+      "id": "8449681f-6ac0-4d6c-b341-35077d39d469",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2020,
+        1440
+      ],
+      "id": "eb10abd6-d376-48b2-806b-ad9ac4307c4d",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update test_step_data set value = {{\"\\\"\" +$json.value +\"\\\"\"}} where id = {{ $json.id }};",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        2400,
+        1460
+      ],
+      "id": "e243d672-d730-4949-b4fc-6a08ce06428c",
+      "name": "Update Test_data"
+    },
+    {
+      "parameters": {
+        "jsCode": "return JSON.parse($input.first().json.output)"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        1440
+      ],
+      "id": "d9cc77d5-2493-4cb7-9441-61f177c0fbbc",
+      "name": "JSON parsing"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id, database_name, shard from tenants where id ={{ $json.tenant_id }};",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -680,
+        1340
+      ],
+      "id": "bfed1eb4-863d-4e75-8be1-52b40db3e0e8",
+      "name": "Retrive tenant",
+      "credentials": {
+        "mySql": {
+          "id": "nIXLn76IWt8zGyEa",
+          "name": "Dynamic tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id , action , template_id , wait_time , max_retries , test_case_id from nlp_test_case_step where id = {{ $('Edit Fields1').item.json.step_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -460,
+        1340
+      ],
+      "id": "a0e6fa48-68c4-4389-9f07-5beed06943f8",
+      "name": "Test Step",
+      "credentials": {
+        "mySql": {
+          "id": "nIXLn76IWt8zGyEa",
+          "name": "Dynamic tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select grammer , data , action ,data_attributes  from nlp_test_case_step_templates where id = {{ $json.template_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -220,
+        1340
+      ],
+      "id": "4b3a658e-f3f7-4c08-8b87-f9ce44ed95c2",
+      "name": "Template Population",
+      "credentials": {
+        "mySql": {
+          "id": "nIXLn76IWt8zGyEa",
+          "name": "Dynamic tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "bucketName": "custify-raw-data",
+        "fileKey": "=analyzer_agent/{{ $('Edit Fields1').item.json.tenant_id }}/case-{{ $('Test Step').item.json.test_case_id }}/suggestions/suggestion-{{ $('Edit Fields1').item.json.test_case_result_id }}.json"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        20,
+        1340
+      ],
+      "id": "88cea46e-cbfd-401d-8775-bc808b211ee6",
+      "name": "Analyser Suggestion Download",
+      "credentials": {
+        "s3": {
+          "id": "ueIpS1A1bLq1Q6oj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        1640
+      ],
+      "id": "38643153-8638-4dd3-b269-593e4a1b33c2",
+      "name": "AWS Bedrock Chat Model"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "rightValue": "TIMEOUT",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f841e02a-0083-42d8-8c27-355a41951298"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TIMEOUT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b343fa81-7cf6-4d48-be40-b1fa18f62919",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "rightValue": "LAB",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "LAB"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "46bc3b68-bba2-4a54-a574-b99ad5f6d6c2",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "rightValue": "TEST_DATA",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TEST DATA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5c4b5ac8-56f1-4746-a0b6-5bbe1e7e5ed9",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "rightValue": "=[TEST_DATA, TIMEOUT, LAB]",
+                    "operator": {
+                      "type": "array",
+                      "operation": "notContains",
+                      "rightType": "any"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ELEMENT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        460,
+        1300
+      ],
+      "id": "9ebfe48f-24fe-4eb3-b389-d24581ceaaa1",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.switch }}",
+                    "rightValue": "PATH_ISSUE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "89dacfcf-352a-42a6-8bc9-ecae81760df0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PATH_ISSUE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1000,
+        2060
+      ],
+      "id": "9f14ea56-ad5c-49b2-b0c7-fae31c80bc8f",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "bucketName": "custify-raw-data",
+        "fileKey": "=analyzer-agent/{{ $('Main input').item.json.tenant_id }}/case-{{ $('Main input').item.json.test_case_id }}/mapped-results/result-{{ $('Main input').item.json.test_case_result_id }}.json"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        2060
+      ],
+      "id": "8e1b9b46-73f1-461a-8235-222466a69b43",
+      "name": "Download mapped results1",
+      "credentials": {
+        "s3": {
+          "id": "ueIpS1A1bLq1Q6oj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        2060
+      ],
+      "id": "29a4674b-b848-4818-a71e-7a2152b46d74",
+      "name": "Get mapped results1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a69a67d2-8c46-4e64-aeb2-40832f1f1e68",
+              "leftValue": "={{ $json.data.parseJson().failed_result_context_details?.[0]?.element_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1660,
+        2060
+      ],
+      "id": "1c18ffb5-8b50-410c-986f-f5b08f08c34c",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT locator_tree_id FROM field_definition WHERE id = {{ $('Get mapped results').item.json.data.parseJson().failed_result_context_details[0].element_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1900,
+        2040
+      ],
+      "id": "18a01bce-a0f8-466a-bdc2-d2e25172191f",
+      "name": "Fetch locator id1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "D05japPKty8F81tv",
+          "name": "Maintenance Tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "775d1804-dafe-480a-a356-2713c3c4c814",
+              "name": "mapped_results",
+              "value": "={{ $('Get mapped results1').item.json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "13ac9eba-5718-49f7-9ecf-0ec62fc8e6c5",
+              "name": "locator_tree_id",
+              "value": "={{ $json.locator_tree_id }}",
+              "type": "string"
+            },
+            {
+              "id": "276e9a30-ce92-4703-918c-459149b1c33c",
+              "name": "suggestion",
+              "value": "={{ $('Get Suggestion file').item.json.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2120,
+        2040
+      ],
+      "id": "7f2f1f2d-e821-4bf7-937c-ee5c61675346",
+      "name": "Helper input1"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "path_issues = [\n    \"ELEMENT_NOT_FOUND\",\n    \"DUPLICATE_UI_IDENTIFIERS\",\n    \"INCORRECT_OR_INVALID_UI_IDENTIFIER\",\n    \"EMPTY_UI_IDENTIFIER\"\n    ]\nfor item in _input.all():\n  data = item.json.get('data', '{}')\n  print(\"Data: \", data)\n  \nif any(issue in data for issue in path_issues):\n        return {\n          \"switch\": \"PATH_ISSUE\"\n        }\n  \nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        2060
+      ],
+      "id": "f96d5918-b923-4ee0-ad47-32e2e09ac05d",
+      "name": "classify issues1"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import json\n\ndef get_locator_tree_url(input, failed_result_context_details):\n  locator_tree_id = input.get('locator_tree_id')\n  locator_tree_url = failed_result_context_details.get(\"element_screenshots\").replace(\"element-screenshot\", \"locator-tree\").rsplit(\"/\", 1)[0]  \n  locator_tree_url = f\"{locator_tree_url}/locator-tree-{locator_tree_id}.json\"\n  return locator_tree_url\n\nfor item in _input.all():\n  input = item.json\n\nmapped_results = json.loads(input.get('mapped_results',{}))\n\nfailed_result_context_details = mapped_results.get('failed_result_context_details')[0]\n\nif (\"element_screenshots\" in failed_result_context_details):\n  failed_result_context_details[\"locator_tree_url\"] = get_locator_tree_url(input, failed_result_context_details)\n\nmapped_results['failed_result_context_details'] = failed_result_context_details\n\nsuggestion_value = input.get('suggestion', {})\n\n# If it's a string, parse it into a dictionary\nif isinstance(suggestion_value, str):\n    suggestion = json.loads(suggestion_value)\nelse:\n    suggestion = suggestion_value  \n  \nprint(suggestion)\n\ninput_json = {\n  \"mapped_results\": {\n    \"step_result_message\": failed_result_context_details.get('message'),\n    \"step_action\": failed_result_context_details.get('action'),\n    \"execution_logs\": failed_result_context_details.get('execution_logs'),\n    \"selenium_logs\": failed_result_context_details.get('selenium_logs'),\n    \"test_case_result_message\": mapped_results.get('test_case_message'),\n  },\n  \"locator_tree_url\": failed_result_context_details.get('locator_tree_url'),\n  \"screenshot_url\": failed_result_context_details.get('screenshots'),\n  \"element_screenshot_url\": failed_result_context_details.get('element_screenshots'),\n  \"failed_locator_url\": failed_result_context_details.get('failed_locator'),\n  \"suggestion\": suggestion,\n  \"step_context\": mapped_results.get('step_results_context')\n}\n  \n\nreturn input_json"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2340,
+        2040
+      ],
+      "id": "751b31e2-75b0-43b4-99c7-080de408595e",
+      "name": "Generate prompt input1"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2560,
+        2040
+      ],
+      "id": "7653bf27-d712-4ad6-82ef-3b3818cef406",
+      "name": "Convert input json to binary data1"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/Users/divya/HOME/WORK/analyzer-agent/element_input.json",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        2040
+      ],
+      "id": "5dc8cb7f-eb46-46a9-ada1-e3fffd3739c3",
+      "name": "Write input json file1"
+    },
+    {
+      "parameters": {
+        "command": "cd /Users/divya/HOME/WORK/analyzer-agent/ && \nsource venv/bin/activate &&\npython element_maintenance_llm.py --json_file element_input.json"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        3020,
+        2040
+      ],
+      "id": "1ab87275-4c94-422e-a8b9-8ccc53ea4459",
+      "name": "Execute Command1"
+    },
+    {
+      "parameters": {
+        "content": "## Lab related issues",
+        "height": 280,
+        "width": 600,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        920
+      ],
+      "id": "984452e1-bbc9-4b9e-b9b8-04d3e5f1c6c0",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "94e29a56-0f3e-4299-91d3-032bd0a2dd76",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        1000
+      ],
+      "id": "50216df4-f353-4d71-9abb-3143a77ae0f2",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update execution_environment \nset capabilities = {{ $json?.data?.output?.errors?.[0]?.desired_capability_suggestions || $json?.data?.output?.parseJson?.().desired_capability_suggestions || $json?.data?.output?.parseJson?.().errors[0].desired_capability_suggestions}}\nwhere id = (select er.environment_id from environment_result AS er join test_case_result AS tcr on er.id=tcr.env_run_id WHERE tcr.id =  {{ $('Edit Fields1').item.json.test_case_result_id }});\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1080,
+        980
+      ],
+      "id": "c395e81f-3d11-4ebd-8adf-b9f7d6082722",
+      "name": "update capabilities",
+      "credentials": {
+        "mySql": {
+          "id": "nIXLn76IWt8zGyEa",
+          "name": "Dynamic tenant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Element\n",
+        "height": 380,
+        "width": 2580
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        700,
+        1940
+      ],
+      "typeVersion": 1,
+      "id": "3933bc27-3de4-4b38-a8c3-cd2ee97f7590",
+      "name": "Sticky Note1"
+    }
+  ],
+  "connections": {
+    "environment_result1": {
+      "main": [
+        [
+          {
+            "node": "Populate new timeout values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Retrive tenant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Populate new timeout values": {
+      "main": [
+        [
+          {
+            "node": "Update timeouts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data For TestData update": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "JSON parsing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Update Test_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Test_data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON parsing": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrive tenant": {
+      "main": [
+        [
+          {
+            "node": "Test Step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Step": {
+      "main": [
+        [
+          {
+            "node": "Template Population",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Population": {
+      "main": [
+        [
+          {
+            "node": "Analyser Suggestion Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyser Suggestion Download": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Bedrock Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "environment_result1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data For TestData update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "classify issues1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Download mapped results1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download mapped results1": {
+      "main": [
+        [
+          {
+            "node": "Get mapped results1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get mapped results1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Fetch locator id1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch locator id1": {
+      "main": [
+        [
+          {
+            "node": "Helper input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Helper input1": {
+      "main": [
+        [
+          {
+            "node": "Generate prompt input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "classify issues1": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate prompt input1": {
+      "main": [
+        [
+          {
+            "node": "Convert input json to binary data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert input json to binary data1": {
+      "main": [
+        [
+          {
+            "node": "Write input json file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write input json file1": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "update capabilities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update capabilities": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "17831950af7d281ea8dd62892c8c6abf19d58e3c7b01567fa24ccb65dce8de9f"
+  }
+}
