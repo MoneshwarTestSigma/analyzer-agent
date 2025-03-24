@@ -24,7 +24,7 @@ def should_skip_analysis(input_json):
     return False, None
 
 
-def save_mapped_results(mapped_results, output_file):
+def save_file(mapped_results, output_file):
     with open(output_file, 'w') as f:
         if(output_file.endswith('.json')):
             json.dump(mapped_results, f, indent=4)

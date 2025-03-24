@@ -2,7 +2,7 @@ from s3_client import S3Client
 from utils import get_bucket_and_path
 
 
-def get_transformed_step_results(step_results_json, screenshot_base_url, element_screenshot_base_url , buffer=0):
+def get_transformed_step_results_for_failure(step_results_json, screenshot_base_url, element_screenshot_base_url,failed_step_locator_base_url, buffer=0):
         transformed_data = {}
         filtered_results = []
         context_results = []
@@ -15,12 +15,22 @@ def get_transformed_step_results(step_results_json, screenshot_base_url, element
             
             # Transform only the filtered data
         for step in filtered_results:
-            transformed_data[step.get('uuid')] = transform_step(step , screenshot_base_url , element_screenshot_base_url)
+            transformed_data[step.get('uuid')] = transform_step(step , screenshot_base_url , element_screenshot_base_url, failed_step_locator_base_url)
 
         return transformed_data, context_results
 
+def get_transformed_step_results_for_success(step_results_json, screenshot_base_url, element_screenshot_base_url, step_id):
+        transformed_success_step = {}
+        context_results = []
+        for i, step in enumerate(step_results_json):
+            if step.get('metadata',{}).get('testStep',{}).get('id') == step_id:
+                transformed_success_step = transform_step(step, screenshot_base_url, element_screenshot_base_url)
+            context_results.append(context_transform(step))
+
+        return transformed_success_step, context_results
+
 def get_mapped_result_url(input_json):
-    base_url = "custify-raw-data/analyzer_agent/{tenant_id}/case-{test_case_id}/result-{test_case_result_id}-mapped-results.json"
+    base_url = "custify-raw-data/analyzer-agent/{tenant_id}/case-{test_case_id}/mapped-results/result-{test_case_result_id}.json"
     return base_url.format(
         tenant_id=str(input_json.get('tenant_id')),
         test_case_id=str(input_json.get('test_case_id')),
@@ -28,7 +38,8 @@ def get_mapped_result_url(input_json):
     )
 
 # Helpers:
-def transform_step(step , screenshot_base_url , element_screenshot_base_url):
+def transform_step(step, screenshot_base_url, element_screenshot_base_url, failed_step_locator_base_url):
+    element_id = step.get('fieldDefinitionDetails', {}).get('ui-identifier', {}).get('uiIdentifierEntity', {}).get('id')
     return {
         'step_result_number': step.get('stepNumber'),
         'uuid': step.get('uuid'),
@@ -44,33 +55,28 @@ def transform_step(step , screenshot_base_url , element_screenshot_base_url):
         'execution_logs': [],
         'selenium_logs': [],
         'console_logs': [],
-        'screenshots' : get_screenshot_presigned(step , screenshot_base_url),
-        'element_screenshots' : get_element_screenshot_presigned(step , element_screenshot_base_url)
+        **({
+            'element_id': element_id,
+            'element_screenshots' : get_element_screenshot(step, element_screenshot_base_url, element_id),
+            } if element_id is not None else {}),
+        'screenshots' : get_screenshot(step , screenshot_base_url),
+        'failed_locator': get_failed_locator(step, failed_step_locator_base_url)
     }
 
-def get_screenshot_presigned(step , screenshot_base_url):
+def get_screenshot(step, screenshot_base_url):
     screenshot_name = step.get('screenshotName')
     if screenshot_name is None:
         return ""
-    s3_client = S3Client()
-    bucket, path = get_bucket_and_path(screenshot_base_url)
-    presigned_url = s3_client.get_presigned_url(
-        bucket,
-        f"{path}{screenshot_name}"
-    )
-    return presigned_url
+    return screenshot_base_url + screenshot_name
 
-def get_element_screenshot_presigned(step , element_screenshot_base_url):
-    element_id = step.get('fieldDefinitionDetails', {}).get('ui-identifier', {}).get('uiIdentifierEntity', {}).get('id')
-    if element_id is None:
+def get_element_screenshot(step, element_screenshot_base_url, element_id):
+    return element_screenshot_base_url + f"element-{element_id}.png"
+
+def get_failed_locator(step, failed_step_locator_base_url):
+    failed_step_locator_name = step.get('uuid')
+    if failed_step_locator_name is None:
         return ""
-    bucket, path = get_bucket_and_path(element_screenshot_base_url)
-    s3_client = S3Client()
-    presigned_url = s3_client.get_presigned_url(
-        bucket,
-        f"{path}element-{element_id}.png"
-    )
-    return presigned_url
+    return failed_step_locator_base_url + failed_step_locator_name  + '.html'
 
 def context_transform(step):
     return {

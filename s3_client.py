@@ -19,7 +19,7 @@ class S3Client():
             endpoint_url="https://s3.amazonaws.com/"
         )
     
-    def get_presigned_url(self, bucket_name, object_key, expiration=10800):
+    def get_presigned_url(self, url , expiration=10800):
             """
             Generate a presigned URL for an S3 object.
 
@@ -29,6 +29,9 @@ class S3Client():
             :return: Presigned URL as a string.
             """
             try:
+                bucket_name, object_key = self.extract_bucket_and_prefix(url)
+                if self.get_file(bucket_name + object_key) is None:
+                    return None
                 url = self.s3.generate_presigned_url(
                     'get_object',
                     Params={'Bucket': bucket_name, 'Key': object_key},
@@ -36,7 +39,7 @@ class S3Client():
                 )
                 return url
             except Exception as e:
-                print(f"Error generating presigned URL: {e}")
+                # print(f"Error generating presigned URL: {e}")
                 return None
     
     def get_file(self, url, decode='utf-8'):
@@ -53,10 +56,10 @@ class S3Client():
                 return data.splitlines()
             return json.loads(data)
         except self.s3.exceptions.NoSuchKey:
-            print(f"File not found in S3: {url}")
+            # print(f"File not found in S3: {url}")
             return None
         except Exception as e:
-            print(f"Error accessing file {url}: {str(e)}")
+            # print(f"Error accessing file {url}: {str(e)}")
             return None
     
     def extract_bucket_and_prefix(self, url):
@@ -74,7 +77,7 @@ class S3Client():
         prefix = '/'.join(parts[1:]) if len(parts) > 1 else ''
         return bucket, prefix
     
-    def list_and_download_json_files(self, url):
+    def get_all_step_results(self, url):
         """
         Lists all available paths in given S3 folder and downloads JSON files
         

@@ -47,7 +47,7 @@ def generate_results_with_context(step_results_map, context_results, network_log
     # Prepare the final response structure
     results_with_context = {
         "failed_result_context_details": list(step_results_map.values()),
-        # "step_results_context": context_results,
+        "step_results_context": context_results,
         # "logs": {
         #     "network": network_logs_for_context,
         #     "console": console_logs_for_context,

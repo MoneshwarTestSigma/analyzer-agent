@@ -1,8 +1,8 @@
 import json
 from map_logs_to_step import map_logs_to_steps
-from step_result_transformer import get_transformed_step_results, get_mapped_result_url
+from step_result_transformer import get_transformed_step_results_for_failure, get_mapped_result_url
 from text_summarizer import summarize_text
-from utils import save_mapped_results, should_skip_analysis
+from utils import save_file, should_skip_analysis
 from s3_client import S3Client
 import argparse
 
@@ -29,8 +29,8 @@ def main(input_json):
     mapped_results_file_path = "mapped_results.json"
 
     s3_client = S3Client()
-    steps = s3_client.list_and_download_json_files(steps_base_url)
-    step_results_map , context_results = get_transformed_step_results(steps , screenshot_base_url , element_screenshot_base_url)
+    steps = s3_client.get_all_step_results(steps_base_url)
+    step_results_map , context_results = get_transformed_step_results_for_failure(steps , screenshot_base_url , element_screenshot_base_url, failed_step_locator_base_url)
     network_logs = s3_client.get_file(network_log_url , 'utf-8')
     execution_logs = s3_client.get_file(execution_log_url , 'windows-1252')
     selinium_logs = s3_client.get_file(selenium_log_url , 'windows-1252')
@@ -43,11 +43,11 @@ def main(input_json):
     s3_client.upload_json(mapped_results, mapped_results_file_url)
 
     # # Save results
-    save_mapped_results(mapped_results, mapped_results_file_path)
+    save_file(mapped_results, mapped_results_file_path)
 
     summarized_results = summarize_text(json.dumps(mapped_results))
 
-    save_mapped_results(summarized_results, 'summarized_mapped_results.txt')
+    save_file(summarized_results, 'summarized_mapped_results.txt')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process log URLs from JSON input.")
