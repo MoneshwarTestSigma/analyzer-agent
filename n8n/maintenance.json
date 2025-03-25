@@ -9,15 +9,15 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        1260,
-        580
+        440,
+        180
       ],
-      "id": "b1b2be62-2d40-4a49-917f-f689fefc54e3",
+      "id": "05039cae-dbaa-48ab-a6e4-6bdf23135525",
       "name": "Update timeouts",
       "credentials": {
         "mySql": {
-          "id": "D05japPKty8F81tv",
-          "name": "Maintenance Tenant"
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
         }
       }
     },
@@ -25,16 +25,16 @@
       "parameters": {
         "content": "## TimeOut issue handling",
         "height": 280,
-        "width": 680,
+        "width": 720,
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        740,
-        500
+        -60,
+        100
       ],
-      "id": "993870fb-754f-43b1-bd58-f89fe2e3fa14",
+      "id": "da844234-a8cf-48bb-8534-6a9e8e71afa6",
       "name": "Sticky Note2"
     },
     {
@@ -46,15 +46,15 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        820,
-        580
+        0,
+        180
       ],
-      "id": "c8e534ca-7a50-4abc-bb1a-0db83e2dd230",
+      "id": "6b5754aa-24f3-4ed9-8c18-203e6ac2ec13",
       "name": "environment_result1",
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
         }
       }
     },
@@ -65,25 +65,31 @@
             {
               "id": "4f8d7db2-cb96-4f8e-afa3-737a5c211636",
               "name": "step_id",
-              "value": "847",
+              "value": "797",
               "type": "string"
             },
             {
               "id": "e14cb3a3-05c3-45fe-a7c7-a1bd74a34f63",
               "name": "test_case_result_id",
-              "value": "138",
+              "value": "71",
               "type": "string"
             },
             {
               "id": "022f1270-bd08-4ce1-91c8-80e5a73be919",
               "name": "tenant_id",
-              "value": "200001212",
+              "value": "200001225",
               "type": "string"
             },
             {
               "id": "6b32d0ca-530a-42ae-a0d3-49f5b9632aab",
               "name": "stack",
               "value": "devtesting",
+              "type": "string"
+            },
+            {
+              "id": "3a371cc3-a027-4061-a9d9-b8a798da8537",
+              "name": "path",
+              "value": "/Users/moneshwar/Github_repos/analyzer-agent",
               "type": "string"
             }
           ]
@@ -93,10 +99,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -900,
-        1340
+        -1860,
+        860
       ],
-      "id": "08f26cd7-00bf-4ab5-b277-7e7cd51d8857",
+      "id": "ee20f7bb-f969-465b-b628-fce07b9f1820",
       "name": "Edit Fields1"
     },
     {
@@ -107,10 +113,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        240,
-        1340
+        -720,
+        860
       ],
-      "id": "8b0966a7-dd99-40af-938b-bf9028a7e117",
+      "id": "9a542204-cf3d-4834-909f-14fe1740efb7",
       "name": "Extract from File"
     },
     {
@@ -120,25 +126,25 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1040,
-        580
+        220,
+        180
       ],
-      "id": "383bd7b2-0f28-48d1-a6b7-cafc0e62135f",
+      "id": "d97f1f03-e926-4df2-8584-bd6bed0f59ef",
       "name": "Populate new timeout values"
     },
     {
       "parameters": {
         "content": "## Test Data",
         "height": 460,
-        "width": 1900
+        "width": 1840
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        680,
-        1320
+        -40,
+        860
       ],
       "typeVersion": 1,
-      "id": "a57b1eba-2b32-48b2-8932-b643bdecf83d",
+      "id": "32e803f6-44be-4acf-8d79-c64ca3dc4139",
       "name": "Sticky Note"
     },
     {
@@ -150,11 +156,17 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        860,
-        1440
+        60,
+        960
       ],
-      "id": "2eb7c919-fd9b-403e-9c90-fe6cd0a2b32e",
-      "name": "Data For TestData update"
+      "id": "9d2a205b-b0db-40fb-8dc1-9264ef7b0d30",
+      "name": "Data For TestData update",
+      "credentials": {
+        "mySql": {
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
+        }
+      }
     },
     {
       "parameters": {
@@ -168,10 +180,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
       "position": [
-        1260,
-        1440
+        460,
+        960
       ],
-      "id": "8449681f-6ac0-4d6c-b341-35077d39d469",
+      "id": "9aa19e76-d4d7-4b5e-b30c-fa261483027a",
       "name": "AI Agent"
     },
     {
@@ -183,10 +195,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        2020,
-        1440
+        1220,
+        960
       ],
-      "id": "eb10abd6-d376-48b2-806b-ad9ac4307c4d",
+      "id": "7ade45e9-e2fb-41ed-8dd6-2d1a1f93d74f",
       "name": "Loop Over Items"
     },
     {
@@ -198,11 +210,17 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        2400,
-        1460
+        1600,
+        980
       ],
-      "id": "e243d672-d730-4949-b4fc-6a08ce06428c",
-      "name": "Update Test_data"
+      "id": "8c719dbe-0042-4101-83be-f10c419d64d4",
+      "name": "Update Test_data",
+      "credentials": {
+        "mySql": {
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
+        }
+      }
     },
     {
       "parameters": {
@@ -211,10 +229,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
-        1440
+        880,
+        960
       ],
-      "id": "d9cc77d5-2493-4cb7-9441-61f177c0fbbc",
+      "id": "aefb6e46-2056-4fa5-8848-9314a84520d1",
       "name": "JSON parsing"
     },
     {
@@ -226,15 +244,15 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -680,
-        1340
+        -1640,
+        860
       ],
-      "id": "bfed1eb4-863d-4e75-8be1-52b40db3e0e8",
+      "id": "682450e7-f094-4b14-a60a-4af3ce4b519c",
       "name": "Retrive tenant",
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "vDHqi7RExGEpBKRp",
+          "name": "Master Maintainence"
         }
       }
     },
@@ -247,15 +265,15 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -460,
-        1340
+        -1420,
+        860
       ],
-      "id": "a0e6fa48-68c4-4389-9f07-5beed06943f8",
+      "id": "f05df6cf-8daa-40c5-b08b-684408ae6fa3",
       "name": "Test Step",
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
         }
       }
     },
@@ -268,34 +286,34 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -220,
-        1340
+        -1180,
+        860
       ],
-      "id": "4b3a658e-f3f7-4c08-8b87-f9ce44ed95c2",
+      "id": "c8c72137-9d0a-4a0e-acd3-5ac688ea89ce",
       "name": "Template Population",
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "vDHqi7RExGEpBKRp",
+          "name": "Master Maintainence"
         }
       }
     },
     {
       "parameters": {
         "bucketName": "custify-raw-data",
-        "fileKey": "=analyzer_agent/{{ $('Edit Fields1').item.json.tenant_id }}/case-{{ $('Test Step').item.json.test_case_id }}/suggestions/suggestion-{{ $('Edit Fields1').item.json.test_case_result_id }}.json"
+        "fileKey": "=analyzer-agent/{{ $('Edit Fields1').item.json.tenant_id }}/case-{{ $('Test Step').item.json.test_case_id }}/suggestions/suggestion-{{ $('Edit Fields1').item.json.test_case_result_id }}.json"
       },
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        20,
-        1340
+        -940,
+        860
       ],
-      "id": "88cea46e-cbfd-401d-8775-bc808b211ee6",
+      "id": "035e804c-9de1-4e5f-87a1-64fe7f036a64",
       "name": "Analyser Suggestion Download",
       "credentials": {
         "s3": {
-          "id": "ueIpS1A1bLq1Q6oj",
+          "id": "IttgcuyQmGboGqT1",
           "name": "S3 account"
         }
       }
@@ -308,11 +326,17 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
       "typeVersion": 1,
       "position": [
-        1260,
-        1640
+        460,
+        1160
       ],
-      "id": "38643153-8638-4dd3-b269-593e4a1b33c2",
-      "name": "AWS Bedrock Chat Model"
+      "id": "0794e03a-7a38-4f98-bec5-ed010fdb8ce7",
+      "name": "AWS Bedrock Chat Model",
+      "credentials": {
+        "aws": {
+          "id": "WJBOB7X7sU9kIhO8",
+          "name": "For Bedrock"
+        }
+      }
     },
     {
       "parameters": {
@@ -328,7 +352,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error || $json?.data?.stdout?.parseJson?.()?.classified_error || $json.data.parseJson().classified_error}}",
                     "rightValue": "TIMEOUT",
                     "operator": {
                       "type": "string",
@@ -353,7 +377,7 @@
                 "conditions": [
                   {
                     "id": "b343fa81-7cf6-4d48-be40-b1fa18f62919",
-                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error || $json?.data?.stdout?.parseJson?.()?.classified_error || $json.data.parseJson().classified_error}}",
                     "rightValue": "LAB",
                     "operator": {
                       "type": "string",
@@ -378,7 +402,7 @@
                 "conditions": [
                   {
                     "id": "46bc3b68-bba2-4a54-a574-b99ad5f6d6c2",
-                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
+                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error || $json?.data?.stdout?.parseJson?.()?.classified_error || $json.data.parseJson().classified_error}}",
                     "rightValue": "TEST_DATA",
                     "operator": {
                       "type": "string",
@@ -403,8 +427,8 @@
                 "conditions": [
                   {
                     "id": "5c4b5ac8-56f1-4746-a0b6-5bbe1e7e5ed9",
-                    "leftValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error}}",
-                    "rightValue": "=[TEST_DATA, TIMEOUT, LAB]",
+                    "leftValue": "={{[\"TEST_DATA\", \"TIMEOUT\", \"LAB\"]}}",
+                    "rightValue": "={{ $json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error || $json?.data?.stdout?.parseJson?.()?.classified_error || $json.data.parseJson().classified_error}}",
                     "operator": {
                       "type": "array",
                       "operation": "notContains",
@@ -424,10 +448,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        460,
-        1300
+        -280,
+        840
       ],
-      "id": "9ebfe48f-24fe-4eb3-b389-d24581ceaaa1",
+      "id": "4337a49f-a302-41b2-888c-b576c1d1e4bd",
       "name": "Switch1"
     },
     {
@@ -465,28 +489,28 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1000,
-        2060
+        280,
+        1600
       ],
-      "id": "9f14ea56-ad5c-49b2-b0c7-fae31c80bc8f",
+      "id": "d00fa205-1205-48f6-9e30-0c843869495e",
       "name": "Switch2"
     },
     {
       "parameters": {
         "bucketName": "custify-raw-data",
-        "fileKey": "=analyzer-agent/{{ $('Main input').item.json.tenant_id }}/case-{{ $('Main input').item.json.test_case_id }}/mapped-results/result-{{ $('Main input').item.json.test_case_result_id }}.json"
+        "fileKey": "=analyzer-agent/{{ $('Edit Fields1').item.json.tenant_id }}/case-{{ $('Test Step').item.json.test_case_id }}/mapped-results/result-{{ $('Edit Fields1').item.json.test_case_result_id }}.json"
       },
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        1220,
-        2060
+        500,
+        1600
       ],
-      "id": "8e1b9b46-73f1-461a-8235-222466a69b43",
+      "id": "a161e90c-5ad1-451e-b19f-690a9dd9cdb7",
       "name": "Download mapped results1",
       "credentials": {
         "s3": {
-          "id": "ueIpS1A1bLq1Q6oj",
+          "id": "IttgcuyQmGboGqT1",
           "name": "S3 account"
         }
       }
@@ -499,10 +523,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1440,
-        2060
+        720,
+        1600
       ],
-      "id": "29a4674b-b848-4818-a71e-7a2152b46d74",
+      "id": "c845a3c6-306e-4fec-819b-27a3a6f1a45b",
       "name": "Get mapped results1"
     },
     {
@@ -533,31 +557,31 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1660,
-        2060
+        940,
+        1600
       ],
-      "id": "1c18ffb5-8b50-410c-986f-f5b08f08c34c",
+      "id": "b2944d0a-41c2-44f7-95dd-5b3d9d9d5d0d",
       "name": "If1"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT locator_tree_id FROM field_definition WHERE id = {{ $('Get mapped results').item.json.data.parseJson().failed_result_context_details[0].element_id }}",
+        "query": "SELECT locator_tree_id FROM field_definition WHERE id = {{$('Get mapped results1').item.json.data.parseJson().failed_result_context_details[0].element_id  }}",
         "options": {}
       },
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        1900,
-        2040
+        1180,
+        1580
       ],
-      "id": "18a01bce-a0f8-466a-bdc2-d2e25172191f",
+      "id": "ab2533da-6b9a-41e1-81fd-4acbca4490a1",
       "name": "Fetch locator id1",
       "alwaysOutputData": true,
       "credentials": {
         "mySql": {
-          "id": "D05japPKty8F81tv",
-          "name": "Maintenance Tenant"
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
         }
       }
     },
@@ -580,7 +604,7 @@
             {
               "id": "276e9a30-ce92-4703-918c-459149b1c33c",
               "name": "suggestion",
-              "value": "={{ $('Get Suggestion file').item.json.data }}",
+              "value": "={{ $('Extract from File').item.json.data.stdout }}",
               "type": "string"
             }
           ]
@@ -590,24 +614,23 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2120,
-        2040
+        1400,
+        1580
       ],
-      "id": "7f2f1f2d-e821-4bf7-937c-ee5c61675346",
+      "id": "bb8153e8-680f-49eb-83a0-ed6483471dd2",
       "name": "Helper input1"
     },
     {
       "parameters": {
-        "language": "python",
-        "pythonCode": "path_issues = [\n    \"ELEMENT_NOT_FOUND\",\n    \"DUPLICATE_UI_IDENTIFIERS\",\n    \"INCORRECT_OR_INVALID_UI_IDENTIFIER\",\n    \"EMPTY_UI_IDENTIFIER\"\n    ]\nfor item in _input.all():\n  data = item.json.get('data', '{}')\n  print(\"Data: \", data)\n  \nif any(issue in data for issue in path_issues):\n        return {\n          \"switch\": \"PATH_ISSUE\"\n        }\n  \nreturn _input.all()"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst firstItem =  $input.all()[0]\nconst analyzed_error = JSON.parse(firstItem?.json?.data?.stdout || firstItem?.json?.data).classified_error\n\n\nconst path_issues = [\n    \"ELEMENT_NOT_FOUND\",\n    \"DUPLICATE_UI_IDENTIFIERS\",\n    \"INCORRECT_OR_INVALID_UI_IDENTIFIER\",\n    \"EMPTY_UI_IDENTIFIER\"\n    ]\n\n// const analyzed_error = {$json?.data?.output?.errors?.[0]?.classified_error || $json?.data?.output?.parseJson?.().classified_error || $json?.data?.output?.parseJson?.().errors[0].classified_error || $json.data.stdout.parseJson().classified_error}\n  \nif(path_issues.includes(analyzed_error))\n  return {\n          \"switch\": \"PATH_ISSUE\"\n        }\n  \nreturn $input.all()\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        780,
-        2060
+        60,
+        1600
       ],
-      "id": "f96d5918-b923-4ee0-ad47-32e2e09ac05d",
+      "id": "c1c84194-2c15-4f83-a536-b60d258bc651",
       "name": "classify issues1"
     },
     {
@@ -618,10 +641,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2340,
-        2040
+        1620,
+        1580
       ],
-      "id": "751b31e2-75b0-43b4-99c7-080de408595e",
+      "id": "0cedb3f9-6daf-4da0-a488-740b31fc5523",
       "name": "Generate prompt input1"
     },
     {
@@ -633,16 +656,16 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        2560,
-        2040
+        1840,
+        1580
       ],
-      "id": "7653bf27-d712-4ad6-82ef-3b3818cef406",
+      "id": "9d09b914-766e-4dee-b269-e70315edb09c",
       "name": "Convert input json to binary data1"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "/Users/divya/HOME/WORK/analyzer-agent/element_input.json",
+        "fileName": "={{ $('Edit Fields1').item.json.path }}/element_input.json",
         "options": {
           "append": false
         }
@@ -650,23 +673,23 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        2800,
-        2040
+        2080,
+        1580
       ],
-      "id": "5dc8cb7f-eb46-46a9-ada1-e3fffd3739c3",
+      "id": "0d65e044-df7e-4226-bdae-29073bddb515",
       "name": "Write input json file1"
     },
     {
       "parameters": {
-        "command": "cd /Users/divya/HOME/WORK/analyzer-agent/ && \nsource venv/bin/activate &&\npython element_maintenance_llm.py --json_file element_input.json"
+        "command": "=cd {{ $('Edit Fields1').item.json.path }} && \nsource myenv/bin/activate &&\npython element_maintenance_llm.py --json_file element_input.json"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        3020,
-        2040
+        2300,
+        1580
       ],
-      "id": "1ab87275-4c94-422e-a8b9-8ccc53ea4459",
+      "id": "763bda6e-3c9d-44ab-b12f-8d6ca4d3e7bc",
       "name": "Execute Command1"
     },
     {
@@ -679,10 +702,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        740,
-        920
+        -40,
+        440
       ],
-      "id": "984452e1-bbc9-4b9e-b9b8-04d3e5f1c6c0",
+      "id": "e61c1c5d-b4d3-4d6d-a888-4f5f4f440731",
       "name": "Sticky Note3"
     },
     {
@@ -713,10 +736,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        820,
-        1000
+        40,
+        540
       ],
-      "id": "50216df4-f353-4d71-9abb-3143a77ae0f2",
+      "id": "071e0aac-34f6-43ae-a159-bfcd1871bc3c",
       "name": "If2"
     },
     {
@@ -728,32 +751,90 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        1080,
-        980
+        340,
+        520
       ],
-      "id": "c395e81f-3d11-4ebd-8adf-b9f7d6082722",
+      "id": "91d5b1f6-c8ed-4ba3-87d9-bfb30cc6923d",
       "name": "update capabilities",
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
         }
       }
     },
     {
       "parameters": {
         "content": "## Element\n",
-        "height": 380,
-        "width": 2580
+        "height": 360,
+        "width": 3060
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        700,
-        1940
+        -40,
+        1480
       ],
       "typeVersion": 1,
-      "id": "3933bc27-3de4-4b38-a8c3-cd2ee97f7590",
+      "id": "e929e8eb-9b16-49fe-963a-8a2aeda59b45",
       "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2080,
+        860
+      ],
+      "id": "1f0211e5-7df9-4ffb-8470-5ae47db0327c",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update field_definition set field_definition ={{ '\\\"' + $json.stdout.parseJson().field_definition +  '\\\"' }}  ,\nlocator_type_enum = {{ '\\\"' + $json.stdout.parseJson().locator_type_enum +  '\\\"' }}  where id = {{$('Get mapped results1').item.json.data.parseJson().failed_result_context_details[0].element_id  }} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        2760,
+        1580
+      ],
+      "id": "5ad476d8-b9bf-4f2a-88c4-816447d20904",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "ZyZtIK7Uxr9MWwSC",
+          "name": "Tenant---maintainance"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n$input.all()[0].json.data = $input.all()[0].json.data.replace(/^```json\\n|\\n```$/g, \"\")\nreturn $input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        860
+      ],
+      "id": "d15db4e0-1fc5-4540-85a8-b6394f756977",
+      "name": "Removing Json tag ifpresent"
+    },
+    {
+      "parameters": {
+        "jsCode": "$input.first().json.stdout = $input.first().json.stdout.replace(/^```json\\n|\\n```$/g, \"\")\nreturn $input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2540,
+        1580
+      ],
+      "id": "21a487db-df2f-4e34-ad20-9c44163f2e14",
+      "name": "Removing Json tag ifpresent1"
     }
   ],
   "connections": {
@@ -783,7 +864,7 @@
       "main": [
         [
           {
-            "node": "Switch1",
+            "node": "Removing Json tag ifpresent",
             "type": "main",
             "index": 0
           }
@@ -1054,6 +1135,17 @@
         ]
       ]
     },
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "Removing Json tag ifpresent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "If2": {
       "main": [
         [
@@ -1065,15 +1157,43 @@
         ]
       ]
     },
-    "update capabilities": {
+    "When clicking ‘Test workflow’": {
       "main": [
-        []
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Removing Json tag ifpresent": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Removing Json tag ifpresent1": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "17831950af7d281ea8dd62892c8c6abf19d58e3c7b01567fa24ccb65dce8de9f"
+    "instanceId": "b5cff35ee23cc56c30ead78eebf7e655fbec693f9201b19ee47eb093083ae09e"
   }
 }

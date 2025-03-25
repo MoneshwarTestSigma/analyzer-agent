@@ -38,6 +38,7 @@ Reasoning Process:
 - Evaluate each candidate element based on stability (e.g., prefer id, name, or well-structured class attributes over dynamic or ambiguous attributes).
 - If multiple elements match, select the one that is most likely to remain consistent across page loads (e.g., avoid elements with dynamic attributes).
 - Provide a brief explanation of why the selected element is the best match in one sentence.
+- Strightly adhere to the output format below don't add anything extra.
 
 <OUTPUT FORMAT>
 {output_format}
