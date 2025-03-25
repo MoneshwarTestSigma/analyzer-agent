@@ -3,6 +3,9 @@ import json
 import gzip
 import io
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class S3Client():
     """
