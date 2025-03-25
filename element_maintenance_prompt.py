@@ -20,7 +20,7 @@ Element Matching Criteria:
 - If multiple elements match, select the most stable one (e.g., avoid dynamic IDs, prefer well-structured class names).
 - Priority: Always return the key attribute of the best-matched tag. The key is a unique identifier for each tag and must be included in the output.
 - If analyzer suggestion is available, use it to get the reliable identifier
-- locator_type_enum should be <xpath/csspath/id_value/name/class_name/tag_name/js_path> mostly preface in the order mentioned
+- locator_type_enum should be <xpath/csspath/id_value/name/class_name/tag_name/js_path> mostly prefer xpath and csspath in the order mentioned
 
 Input Data:
 - HTML Source: The HTML of the webpage. Each element has a unique key attribute for identification.
@@ -28,6 +28,7 @@ Input Data:
 - Element Screenshot: The element screenshot in which element is inside a green box.
 - Test Steps: A list of steps that we are performing on the webpage.
 - Failed Step Details: The step that failed during the test execution along with the available logs and error message.
+- Strightly adhere to the output format below don't add anything extra.
 
 
 Output Format:
@@ -37,8 +38,6 @@ Reasoning Process:
 - Analyze the entire HTML source and identify all elements that partially or fully match the context.
 - Evaluate each candidate element based on stability (e.g., prefer id, name, or well-structured class attributes over dynamic or ambiguous attributes).
 - If multiple elements match, select the one that is most likely to remain consistent across page loads (e.g., avoid elements with dynamic attributes).
-- Provide a brief explanation of why the selected element is the best match in one sentence.
-- Strightly adhere to the output format below don't add anything extra.
 
 <OUTPUT FORMAT>
 {output_format}
