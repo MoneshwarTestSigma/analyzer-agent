@@ -5,10 +5,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -20,
-        -140
+        -8300,
+        1080
       ],
-      "id": "bfdc7607-4073-4ba4-92f9-05d30bd66775",
+      "id": "c6dcdd38-13a8-4e37-ac63-b0a7875c7a8b",
       "name": "When clicking ‘Test workflow’"
     },
     {
@@ -20,15 +20,15 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        440,
-        -140
+        -7840,
+        1080
       ],
-      "id": "3bb9701a-eaaf-4501-b12f-ff7ea6197e57",
+      "id": "b3260d4b-89e5-4161-97cd-57f609fdea37",
       "name": "Master DB Connector",
       "credentials": {
         "mySql": {
-          "id": "4uqylITESZo6V8Qx",
-          "name": "Dynamic master"
+          "id": "tFht3lNyKjo6T4po",
+          "name": "Master Analyses"
         }
       }
     },
@@ -41,10 +41,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        920,
-        0
+        -7360,
+        1220
       ],
-      "id": "afd6b9e5-7b96-436b-9e1b-a520e46f223d",
+      "id": "b22231fb-1380-43cc-a4b4-d79fee795054",
       "name": "url builder"
     },
     {
@@ -56,16 +56,16 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1920,
-        -80
+        -6360,
+        1140
       ],
-      "id": "56549c94-9539-4f96-9b98-e93e5358a322",
+      "id": "3011feb6-ab34-4786-b0e2-1b2d296fdd31",
       "name": "Convert input json to binary data"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "/Users/divya/HOME/WORK/analyzer-agent/input.json",
+        "fileName": "={{ $('Main input').item.json.path }}/input.json",
         "options": {
           "append": false
         }
@@ -73,23 +73,23 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        2160,
-        -80
+        -6120,
+        1140
       ],
-      "id": "e14fb819-1ab6-4855-ae26-f7410371471f",
+      "id": "dc98f891-2705-463d-aacd-05accdfb074a",
       "name": "Write input json file"
     },
     {
       "parameters": {
-        "command": "=cd {{ $('Main input').item.json.path }} && \nsource venv/bin/activate &&\npython main.py --json_file input.json"
+        "command": "=cd {{ $('Main input').item.json.path }} && \nsource myenv/bin/activate &&\npython3 main.py --json_file input.json"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2360,
-        -80
+        -5920,
+        1140
       ],
-      "id": "9d722347-3a6c-430b-ba9c-0cb5a8acc828",
+      "id": "73ebeaf4-edec-4555-81e9-bc3db0b87788",
       "name": "Map Results"
     },
     {
@@ -101,10 +101,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1140,
-        0
+        -7140,
+        1220
       ],
-      "id": "0b0794fb-2643-4edc-9913-83f278ec5cac",
+      "id": "1f619a89-df45-4cb4-afaf-5f338e789dfb",
       "name": "Loop Over Items"
     },
     {
@@ -116,16 +116,16 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        680,
-        0
+        -7600,
+        1220
       ],
-      "id": "b6359aac-2817-498c-b737-87d8d1cb982c",
+      "id": "3dc02841-21ed-43d9-9caf-4028729cd7c9",
       "name": "Fetch results for failure analysis",
       "alwaysOutputData": true,
       "credentials": {
         "mySql": {
-          "id": "nIXLn76IWt8zGyEa",
-          "name": "Dynamic tenant"
+          "id": "mk5xBR8gxvbnAAh8",
+          "name": "Tenant Analyzer"
         }
       }
     },
@@ -238,10 +238,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3220,
-        -80
+        -5060,
+        1140
       ],
-      "id": "d69c0915-ffbc-4d39-88e4-182b8e27f2ac",
+      "id": "2f967e05-f7d0-4450-a35a-6449defe34a0",
       "name": "Switch"
     },
     {
@@ -259,14 +259,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        2860,
-        140
+        -5420,
+        1360
       ],
-      "id": "b719d744-7339-4430-bce6-adf4a80c9d0b",
+      "id": "0b3a1c1f-1f08-414e-abcf-4e8e52c756ac",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "jymF1nu2yjGsoBFg",
+          "id": "ZT4lcpSLE38rPbz6",
           "name": "OpenAi account"
         }
       }
@@ -286,14 +286,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        3960,
-        420
+        -4320,
+        1640
       ],
-      "id": "1051555b-62b6-48be-a72f-ab84c73a1fb4",
+      "id": "69cc2b84-c327-447c-8904-4912f49dc23e",
       "name": "OpenAI Chat Model1",
       "credentials": {
         "openAiApi": {
-          "id": "jymF1nu2yjGsoBFg",
+          "id": "ZT4lcpSLE38rPbz6",
           "name": "OpenAi account"
         }
       }
@@ -315,10 +315,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3640,
-        220
+        -4640,
+        1440
       ],
-      "id": "01554062-177e-499a-bee5-6a1aaa99b8cd",
+      "id": "731f58bc-7712-4f61-be1d-09b027b2b7ba",
       "name": "Capability MD data"
     },
     {
@@ -334,19 +334,19 @@
             {
               "id": "7bc5c8a2-58b0-4701-81bb-db49802e998a",
               "name": "tenant_id",
-              "value": "200001212",
+              "value": "200001225",
               "type": "string"
             },
             {
               "id": "19af2d63-d6eb-4ab0-b0ca-843f614e1b74",
               "name": "run_id",
-              "value": "91",
+              "value": "71",
               "type": "string"
             },
             {
               "id": "8a04e5b3-9df8-4ca3-b741-6ffd13164b9c",
               "name": "path",
-              "value": "/Users/divya/HOME/WORK/analyzer-agent/",
+              "value": "/Users/moneshwar/Github_repos/analyzer-agent",
               "type": "string"
             }
           ]
@@ -356,23 +356,23 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -140
+        -8060,
+        1080
       ],
-      "id": "99477f45-7c4c-4788-9c40-56ae4adab088",
+      "id": "44111c37-dd6f-4b79-88ed-07f30bd490d6",
       "name": "Main input"
     },
     {
       "parameters": {
-        "command": "=cd {{ $('Main input').item.json.path }} && \nsource venv/bin/activate &&\npython analyzer_prompt.py"
+        "command": "=cd {{ $('Main input').item.json.path }} && \nsource myenv/bin/activate &&\npython analyzer_prompt.py"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        2580,
-        -80
+        -5700,
+        1140
       ],
-      "id": "1c8e2d25-e2c0-4c4f-87cc-2ae8c8d32f14",
+      "id": "be7da6e7-dd19-49bb-8431-6d1e106b34c7",
       "name": "Generate analyzer prompt"
     },
     {
@@ -383,11 +383,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1400,
-        180
+        -6880,
+        1400
       ],
       "typeVersion": 1,
-      "id": "7b334b9a-df9c-4548-adb6-847fda9dc7b9",
+      "id": "b5fdaffe-cdb3-4ed6-857c-8c14b9fa16a9",
       "name": "Sticky Note"
     },
     {
@@ -399,10 +399,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
       "position": [
-        2860,
-        -80
+        -5420,
+        1140
       ],
-      "id": "c87f31e3-55c7-4b26-a56f-f8f3d93bc1d9",
+      "id": "a480e904-aeb0-4a09-a473-a7517574fa56",
       "name": "Failure Classifier",
       "alwaysOutputData": false
     },
@@ -415,23 +415,23 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.8,
       "position": [
-        3940,
-        220
+        -4340,
+        1440
       ],
-      "id": "10b723e4-e057-486e-996e-111ee588b55f",
+      "id": "f4d1cafa-bb25-44b9-ab58-70933afd5b67",
       "name": "Lab failure analyzer"
     },
     {
       "parameters": {
-        "command": "=cd {{ $('Main input').item.json.path }} && \nsource venv/bin/activate &&\npython element_llm.py"
+        "command": "=cd {{ $('Main input').item.json.path }} && \nsource myenv/bin/activate &&\npython element_llm.py"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        3740,
-        -40
+        -4540,
+        1180
       ],
-      "id": "39a2f601-7eeb-45bf-aff2-ccbeae118d7f",
+      "id": "5c161844-556f-4f2a-bbde-cbd00460ad62",
       "name": "Generate element failure analysis"
     },
     {
@@ -451,10 +451,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4020,
-        -40
+        -4260,
+        1180
       ],
-      "id": "cd8445f0-0dd9-4da9-ab30-cb933a6a4ab9",
+      "id": "ddbe8260-e97f-4da4-a05a-f6985df2ea3b",
       "name": "Get element failure analysis",
       "alwaysOutputData": true
     },
@@ -470,14 +470,14 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        4540,
-        -260
+        -3740,
+        960
       ],
-      "id": "0509774e-7ccf-4304-a35f-54c9a7ca84c0",
+      "id": "9d83dc74-0533-4964-a5dc-a857f164c671",
       "name": "Element failure Analysis uploader",
       "credentials": {
         "s3": {
-          "id": "ueIpS1A1bLq1Q6oj",
+          "id": "IttgcuyQmGboGqT1",
           "name": "S3 account"
         }
       }
@@ -510,10 +510,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4940,
-        380
+        -3340,
+        1600
       ],
-      "id": "48db1597-64de-41a2-b575-65b845f7794a",
+      "id": "3af8b823-82c5-4d01-a3c7-8d4cd65149c8",
       "name": "Failure report uploader"
     }
   ],
@@ -771,6 +771,6 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "17831950af7d281ea8dd62892c8c6abf19d58e3c7b01567fa24ccb65dce8de9f"
+    "instanceId": "b5cff35ee23cc56c30ead78eebf7e655fbec693f9201b19ee47eb093083ae09e"
   }
 }
