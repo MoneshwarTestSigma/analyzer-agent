@@ -5,6 +5,9 @@ from element_prompt import get_element_prompt
 from element_llm_utils import get_element_input
 from utils import save_file
 from s3_client import S3Client
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def analyse_element_failure(api_key, input_data , step_screenshot, element_screenshot):

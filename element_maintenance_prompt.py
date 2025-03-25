@@ -1,8 +1,8 @@
 output_format="""```json
 {
-    "locator_type": "<xpath/csspath/id_value/name/class_name/tag_name/js_path>",
-    "name": "<suggest a meaningful name>",
-    "locator_value": "<reliable identifier value that aligns with the locator_type>"
+    "locator_type_enum": "<xpath/csspath/id_value/name/class_name/tag_name/js_path>",
+    "field_name": "<suggest a meaningful name for the element>",
+    "field_definition": "<reliable identifier value that aligns with the locator_type_enum>"
 }
 ```"""
 
@@ -20,6 +20,7 @@ Element Matching Criteria:
 - If multiple elements match, select the most stable one (e.g., avoid dynamic IDs, prefer well-structured class names).
 - Priority: Always return the key attribute of the best-matched tag. The key is a unique identifier for each tag and must be included in the output.
 - If analyzer suggestion is available, use it to get the reliable identifier
+- locator_type_enum should be <xpath/csspath/id_value/name/class_name/tag_name/js_path> mostly preface in the order mentioned
 
 Input Data:
 - HTML Source: The HTML of the webpage. Each element has a unique key attribute for identification.

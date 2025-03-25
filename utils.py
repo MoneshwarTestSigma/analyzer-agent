@@ -3,14 +3,6 @@ import json
 from datetime import datetime
 import pytz
 
-def get_bucket_and_path(url: str):
-    if "/" in url:
-        bucket, path = url.split("/", 1)
-    else:
-        bucket, path = url, "" 
-
-    return bucket, path
-
 def should_skip_analysis(input_json):
     message = input_json.get('message')
     skippable_failures = [
@@ -78,31 +70,6 @@ def get_time_in_milliseconds(timestamp_ms: int) -> int:
     # Extract time components and convert to milliseconds
     return (dt.hour * 3600000) + (dt.minute * 60000) + (dt.second * 1000) + (dt.microsecond // 1000)
 
-
-def get_ms_from_time_old(time_str, source_tz=pytz.timezone("Asia/Kolkata")):
-    """
-    Convert time string from source timezone to IST milliseconds
-    """
-    hour, minute, second_ms = time_str.split(':')
-    second, ms = second_ms.split('.')
-
-    # Create datetime in source timezone
-    source_time = datetime.now(source_tz).replace(
-        hour=int(hour),
-        minute=int(minute),
-        second=int(second),
-        microsecond=int(ms) * 1000
-    )
-
-    # Convert to IST
-    ist = pytz.timezone("Asia/Kolkata")
-    ist_time = source_time.astimezone(ist)
-
-    # Convert IST time to milliseconds
-    return (ist_time.hour * 3600000 + 
-            ist_time.minute * 60000 + 
-            ist_time.second * 1000 + 
-            ist_time.microsecond // 1000)
 
 def get_ms_from_time(time_str, source_tz):
     """

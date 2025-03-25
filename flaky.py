@@ -8,7 +8,7 @@ def construct_flaky_input(input_json):
     failure_data_url = get_mapped_result_url(input_json.get("FAILURE"))
     failure_mapped_data = s3_client.get_file(failure_data_url)
     success_step_results = s3_client.get_all_step_results(input_json.get("success_steps_base_url"))
-    success_step_result_context_details, success_context = get_transformed_step_results_for_success(success_step_results, success_step_results, success_step_results, failure_mapped_data.get("failed_result_context_details")[0].get("step_id"))
+    success_step_result_context_details, success_context = get_transformed_step_results_for_success(success_step_results, input_json.get("SUCCESS"), failure_mapped_data.get("failed_result_context_details"))
     success_mapped_data = {
         "success_result_context_details": success_step_result_context_details,
         "success_context": success_context

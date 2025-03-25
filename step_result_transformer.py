@@ -1,8 +1,4 @@
-from s3_client import S3Client
-from utils import get_bucket_and_path
-
-
-def get_transformed_step_results_for_failure(step_results_json, screenshot_base_url, element_screenshot_base_url,failed_step_locator_base_url, buffer=0):
+def get_transformed_step_results_for_failure(step_results_json, screenshot_base_url, element_screenshot_base_url, failed_step_locator_base_url, buffer=0):
         transformed_data = {}
         filtered_results = []
         context_results = []
@@ -19,10 +15,14 @@ def get_transformed_step_results_for_failure(step_results_json, screenshot_base_
 
         return transformed_data, context_results
 
-def get_transformed_step_results_for_success(step_results_json, screenshot_base_url, element_screenshot_base_url, step_id):
+def get_transformed_step_results_for_success(step_results_json, success_data, failed_result_context_details):
+        step_id = failed_result_context_details[0].get("step_id")
+        test_case_result_id = success_data.get('id')
+        screenshot_base_url = get_success_screenshot_base_url(failed_result_context_details[0].get('screenshots'), test_case_result_id)
+        element_screenshot_base_url = get_success_element_screenshot_base_url(failed_result_context_details[0].get('element_screenshots'))
         transformed_success_step = {}
         context_results = []
-        for i, step in enumerate(step_results_json):
+        for step in step_results_json:
             if step.get('metadata',{}).get('testStep',{}).get('id') == step_id:
                 transformed_success_step = transform_step(step, screenshot_base_url, element_screenshot_base_url)
             context_results.append(context_transform(step))
@@ -38,7 +38,16 @@ def get_mapped_result_url(input_json):
     )
 
 # Helpers:
-def transform_step(step, screenshot_base_url, element_screenshot_base_url, failed_step_locator_base_url):
+def get_success_screenshot_base_url(failure_screenshot_url, test_case_result_id):
+    failure_base = failure_screenshot_url.split('/')[:-2]
+    failure_base.append(str(test_case_result_id))
+    return "/".join(failure_base) + "/"
+
+def get_success_element_screenshot_base_url(failure_element_screenshot_url):
+    failure_base = failure_element_screenshot_url.split('/')[:-1]
+    return "/".join(failure_base) + "/"
+
+def transform_step(step, screenshot_base_url, element_screenshot_base_url, failed_step_locator_base_url=None):
     element_id = step.get('fieldDefinitionDetails', {}).get('ui-identifier', {}).get('uiIdentifierEntity', {}).get('id')
     return {
         'step_result_number': step.get('stepNumber'),
@@ -57,10 +66,12 @@ def transform_step(step, screenshot_base_url, element_screenshot_base_url, faile
         'console_logs': [],
         **({
             'element_id': element_id,
-            'element_screenshots' : get_element_screenshot(step, element_screenshot_base_url, element_id),
+            'element_screenshots' : get_element_screenshot(element_screenshot_base_url, element_id),
             } if element_id is not None else {}),
-        'screenshots' : get_screenshot(step , screenshot_base_url),
-        'failed_locator': get_failed_locator(step, failed_step_locator_base_url)
+        **({
+            'failed_locator': get_failed_locator(step, failed_step_locator_base_url),
+            } if failed_step_locator_base_url is not None else {}),
+        'screenshots' : get_screenshot(step , screenshot_base_url)        
     }
 
 def get_screenshot(step, screenshot_base_url):
@@ -69,7 +80,7 @@ def get_screenshot(step, screenshot_base_url):
         return ""
     return screenshot_base_url + screenshot_name
 
-def get_element_screenshot(step, element_screenshot_base_url, element_id):
+def get_element_screenshot(element_screenshot_base_url, element_id):
     return element_screenshot_base_url + f"element-{element_id}.png"
 
 def get_failed_locator(step, failed_step_locator_base_url):

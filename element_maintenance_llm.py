@@ -7,6 +7,10 @@ from s3_client import S3Client
 import argparse
 import json
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def analyse_element_failure(api_key, input_data , step_screenshot, element_screenshot, locator, page):
     client = openai.OpenAI(api_key=api_key)
@@ -14,11 +18,9 @@ def analyse_element_failure(api_key, input_data , step_screenshot, element_scree
 
     if locator:
         locator_data = s3_client.get_file(locator)
-        # save_file(locator_data, "locator.html")
 
     if page:
         page_data = s3_client.get_file(page)
-        save_file(page_data, "page.json")
 
     prompt = get_element_maintenance_prompt(
         page_data,
@@ -56,12 +58,6 @@ def analyse_element_failure(api_key, input_data , step_screenshot, element_scree
 
     return response.choices[0].message.content
 
-def removeFromInputIfExists(input):
-    for key in input:
-        if key in input:
-            del input[key]
-    return input
-
 
 def main(input_data):
     API_KEY = os.getenv("OPEN_AI_API_KEY")
@@ -69,12 +65,9 @@ def main(input_data):
     element = input_data.get("element_screenshot_url")
     failed_locator = input_data.get("failed_locator_url")
     page_source = input_data.get("locator_tree_url")
-    # input_data = removeFromInputIfExists(["step_screenshot_url", "element_screenshot_url", "failed_locator_url", "locator_tree_url"])
     root_cause = analyse_element_failure(API_KEY , input_data , step , element, failed_locator, page_source)
     save_file(root_cause, 'element_root_cause.txt')
     print(root_cause)
-    
-
 
 
 if __name__ == "__main__":
