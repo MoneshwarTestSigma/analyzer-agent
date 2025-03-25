@@ -66,7 +66,6 @@ def main(input_data):
     failed_locator = input_data.get("failed_locator_url")
     page_source = input_data.get("locator_tree_url")
     root_cause = analyse_element_failure(API_KEY , input_data , step , element, failed_locator, page_source)
-    save_file(root_cause, 'element_root_cause.txt')
     print(root_cause)
 
 

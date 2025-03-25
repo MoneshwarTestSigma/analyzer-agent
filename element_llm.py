@@ -52,5 +52,4 @@ if __name__ == "__main__":
     if "element_screenshots" in input_data:
         del input_data["element_screenshots"]
     root_cause = analyse_element_failure(API_KEY , input_data , step , element)
-    save_file(root_cause, 'element_root_cause.txt')
     print(root_cause)
